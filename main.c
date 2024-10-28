@@ -32,22 +32,28 @@ int contar_linhas(char *nome_arquivo)
   return linhas;
 }
 
+void mostrar_sequencial(SeqPessoa *lista, int tamanho)
+{
+  int contador;
+  for (contador = 0; contador < tamanho; contador++)
+    printf("NOME: %s, RG: %d\n", lista[contador].nome, lista[contador].rg);
+}
+
 void sequencial(FILE *arquivo, char *nome_arquivo)
 {
-  int cont = 0;
+  int dados = 0;
 
   int linhas = contar_linhas(nome_arquivo);
   
   SeqPessoa *lista = malloc(linhas*sizeof(SeqPessoa));
 
-  while (fscanf(arquivo, "%9[^,],%d\n", lista[cont].nome, &lista[cont].rg) == 2)
-    cont++;
+  while (fscanf(arquivo, "%9[^,],%d\n", lista[dados].nome, &lista[dados].rg) == 2)
+    dados++;
 
   fclose(arquivo);
-
-  for (int i = 0; i < cont; i++)
-    printf("NOME: %s, RG: %d\n", lista[i].nome, lista[i].rg);
   
+  mostrar_sequencial(lista, dados);
+
   free(lista);
 }
 
