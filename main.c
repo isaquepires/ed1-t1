@@ -169,15 +169,15 @@ char* opcoes_arquivos()
 int main ()
 {
   char *nome_arquivo = opcoes_arquivos();
-  int option;
+  int opcao;
   
   printf("Arquivo Escolhido: %s\n\n", nome_arquivo);
   printf("Selecione entre os tipos de lista: \n\n");
   printf("1) Lista Sequencial\t2) Lista Encadeada\n\n");
   printf("Opção de lista desejada: \n");
-  scanf("%d", &option);
+  scanf("%d", &opcao);
   
-  switch (option)
+  switch (opcao)
   {
     case 1:
       system("clear");
