@@ -113,45 +113,48 @@ FILE *abrir_aquivo(char *nome_arquivo)
   return arquivo;
 }
 
+
 char* opcoes_arquivos()
 {
-  char *nome_arquivo;
+  char *nome_arquivo = NULL;
   int numero_arquivo;
   printf("Selecione entre os arquivos abaixo: \n\n");
   printf("1) NomeRG10.txt\n2) NomeRG50.txt\n3) NomeRG100.txt\n4) NomeRG1K.txt\n5) NomeRG10K.txt\n6) NomeRG1M.txt\n7) NomeRG100M.txt\n\n");
   printf("Opção de arquivo desejado: \n");
   scanf("%d", &numero_arquivo);
 
-  switch(numero_arquivo)
+  /* Limpando o input buffer para evitar
+  os erros com o uso de caracteres extras */
+  while (getchar() != '\n');
+
+  switch (numero_arquivo)
   {
   case 1:
     nome_arquivo = "NomeRG10.txt";
     break;
-
   case 2:
     nome_arquivo = "NomeRG50.txt";
     break;
-
   case 3:
     nome_arquivo = "NomeRG100.txt";
     break;
-
   case 4:
     nome_arquivo = "NomeRG1K.txt";
     break;
-
   case 5:
     nome_arquivo = "NomeRG10K.txt";
     break;
-
   case 6:
     nome_arquivo = "NomeRG1M.txt";
     break;
-
   case 7:
     nome_arquivo = "NomeRG100M.txt";
     break;
+  default:
+    printf("Opção inválida!\n");
+    exit(1);
   }
+
   system("clear");
 
   return nome_arquivo;
@@ -161,13 +164,13 @@ int main ()
 {
   char *nome_arquivo = opcoes_arquivos();
   int option;
-
+  
   printf("Arquivo Escolhido: %s\n\n", nome_arquivo);
   printf("Selecione entre os tipos de lista: \n\n");
   printf("1) Lista Sequencial\t2) Lista Encadeada\n\n");
   printf("Opção de lista desejada: \n");
   scanf("%d", &option);
-
+  
   switch (option)
   {
     case 1:
@@ -175,12 +178,14 @@ int main ()
       printf("Lista sequencial de %s:\n", nome_arquivo);
       sequencial(abrir_aquivo(nome_arquivo), nome_arquivo);
       break;
-    
     case 2:
       system("clear");
       printf("Lista encadeada de %s:\n", nome_arquivo);
       encadeada(abrir_aquivo(nome_arquivo));
       break;
+    default:
+      printf("Opção inválida!\n");
+      return 1;
   }  
 
   return 0;
