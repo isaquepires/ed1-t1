@@ -273,6 +273,23 @@ void mostrar_sequencial(SeqPessoa *lista, int tamanho)
     printf("NOME: %s, RG: %d\n", lista[contador].nome, lista[contador].rg);
 }
 
+void salvar_lista_sequencial(SeqPessoa *lista, int tamanho) {
+  FILE *arquivo;
+  arquivo = fopen("sequencial.txt", "w");
+    
+  if (arquivo == NULL)
+  {
+    printf("Erro ao abrir o arquivo!\n");
+    return;
+  }
+    
+  for (int i = 0; i < tamanho; i++)
+    fprintf(arquivo, "%s,%d\n", lista[i].nome, lista[i].rg);
+    
+  fclose(arquivo);
+  printf("Lista salva com sucesso em sequencial.txt!\n");
+}
+
 /* Sequencial - Preparar inicializando os tipos de dados e "lendo" os arquivos */
 void sequencial(FILE *arquivo, char *nome_arquivo)
 {
@@ -308,7 +325,7 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
       case 6: retirar_no_posicao_n_sequencial(lista, tamanho); break;
       case 7: procurar_no_rg_sequencial(lista, *tamanho); break;
       case 8: clear(); mostrar_sequencial(lista, *tamanho); break;
-      case 9: break;
+      case 9: salvar_lista_sequencial(lista, *tamanho); break;
       case 10: break;
       case 11: printf("Saindo...\n"); exit(0);
       default: printf("Opção inválida!\n"); break;
@@ -574,6 +591,27 @@ void mostrar_encadeada(EncPessoa *atual)
   }
 }
 
+void salvar_lista_encadeada(EncPessoa *inicio) {
+  FILE *arquivo;
+  arquivo = fopen("encadeada.txt", "w");
+    
+  if (arquivo == NULL)
+  {
+    printf("Erro ao abrir o arquivo!\n");
+    return;
+  }
+    
+  EncPessoa *atual = inicio;
+  while (atual != NULL)
+  {
+    fprintf(arquivo, "%s,%d\n", atual->nome, atual->rg);
+    atual = atual->prox;
+  }
+    
+  fclose(arquivo);
+  printf("Lista salva com sucesso em encadeada.txt!\n");
+}
+
 /* Sequencial - Preparar inicializando os tipos de dados e "lendo" os arquivos */
 void encadeada(FILE *arquivo)
 {
@@ -623,7 +661,7 @@ void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
       case 6: retirar_no_posicao_n_encadeada(&inicio); break;
       case 7: buscar_rg_encadeada(inicio); break;
       case 8: clear(); mostrar_encadeada(inicio); break;
-      case 9: break;
+      case 9: salvar_lista_encadeada(inicio); break;
       case 10: break;
       case 11: printf("Saindo...\n"); exit(0);
       default: printf("Opção inválida!\n"); break;
