@@ -85,12 +85,22 @@ int contar_linhas(char *nome_arquivo)
   char caractere;
 
   while ((caractere = getc(arquivo)) != EOF)
+    c++;
     if (caractere == '\n')
+    {
       linhas++;
-  
+      m++;
+    }
   fclose(arquivo);
 
   return linhas;
+}
+
+void numeros()
+{
+  //printf("\nNOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
 }
 
 /* -------------------- LISTA SEQUENCIAL - INICIO -------------------------- */
@@ -98,14 +108,14 @@ int contar_linhas(char *nome_arquivo)
 /* Sequencial - inserção de um nó no início da lista */
 void inserir_inicio_sequencial(SeqPessoa *lista, int *tamanho)
 {
-  int i;
+  int i, posicao = 0;
   tempo_inicio = clock();
-  m++;
 
   SeqPessoa novaPessoaSequencial;
 
   for (i = *tamanho; i > 0; i--)
   {
+    c++;
     lista[i] = lista[i - 1];
     m++;
   }
@@ -115,22 +125,23 @@ void inserir_inicio_sequencial(SeqPessoa *lista, int *tamanho)
   printf("Insira o RG da pessoa (até 8 dígitos): \n");
   scanf("%d", &novaPessoaSequencial.rg);
   
-  lista[0] = novaPessoaSequencial;
+  lista[posicao] = novaPessoaSequencial;
+  m++;
   (*tamanho)++;
   m++;
 
   tempo_fim = clock();
-  m++;
-  
   printf("\nNOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
 /* Sequencial - inserção de um nó no fim da lista */
 void inserir_fim_sequencial(SeqPessoa *lista, int *tamanho)
 {
+  int posicao = *tamanho;
+  tempo_inicio = clock();
   SeqPessoa novaPessoaSequencial;
 
   printf("Insira o nome da pessoa: \n");
@@ -141,10 +152,11 @@ void inserir_fim_sequencial(SeqPessoa *lista, int *tamanho)
   lista[*tamanho] = novaPessoaSequencial;
   (*tamanho)++;
   m++;
-  
+    
+  tempo_fim = clock();
   printf("\nNOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
@@ -152,15 +164,18 @@ void inserir_fim_sequencial(SeqPessoa *lista, int *tamanho)
 void inserir_posicao_n_sequencial(SeqPessoa *lista, int *tamanho)
 {
   int posicao;
+  tempo_inicio = clock();
 
   printf("Em que posição deseja inserir os novos dados? (0 a %d): \n", *tamanho);
   scanf("%d", &posicao);
   if (posicao < 0 || posicao > *tamanho) {
+    c++;
     printf("Posição inválida!\n");
     return;
   }
 
   for (int i = *tamanho; i > posicao; i--) {
+    c++;
     lista[i] = lista[i - 1];
     m++;
   }
@@ -170,61 +185,91 @@ void inserir_posicao_n_sequencial(SeqPessoa *lista, int *tamanho)
   printf("Insira o RG da pessoa: \n");
   scanf("%d", &lista[posicao].rg); 
   (*tamanho)++;
+  m++;
+  
+  printf("\nNOME: %s, RG: %d\n", lista[posicao].nome, lista[posicao].rg);
+  tempo_fim = clock();
+  numeros();
+  printf("posição na lista: %d\n", posicao);
+  tempo();
 }
 
 /* Sequencial - retirar nó do início da lista sequencial */
 void retirar_no_inicio_sequencial(SeqPessoa *lista, int *tamanho)
 {
-  if (*tamanho == 0)
-    printf("A lista já está vazia.\n");
 
+  int posicao = 0;
   tempo_inicio = clock();
 
+  printf("\nNOME: %s, RG: %d\n", lista[posicao].nome, lista[posicao].rg);
+  
+  if (*tamanho == 0){
+    printf("A lista já está vazia.\n");
+    return;
+  }
+  c++;
+
   for (int i = 0; i < *tamanho - 1; i++) {
+    c++;
     lista[i] = lista[i + 1];
     m++;
   }
 
   m++;
   (*tamanho)--;
-  tempo_fim = clock();
 
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  tempo_fim = clock();
+  numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
 /* Sequencial - Retirar nó do fim da lista sequencial */
 void retirar_no_fim_sequencial(SeqPessoa *lista, int *tamanho)
 {
+  int posicao = 0;
   if (*tamanho == 0)
+  {
     printf("A lista já está vazia.\n");
-  
+    return;
+  }
+  c++;
+
   tempo_inicio = clock();
   m++;
   (*tamanho)--;
+  m++;
 
+  printf("\nNOME: %s, RG: %d\n", lista[*tamanho].nome, lista[*tamanho].rg);
   tempo_fim = clock();
-
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
 /* Sequencial - retirar nó na posição n da lista sequencial */
 void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
   int posicao;
+  tempo_inicio = clock();
 
   printf("Em que posição deseja retirar o dado? (0 a %d): \n", *tamanho - 1);
   scanf("%d", &posicao);
 
+  printf("\nNOME: %s, RG: %d\n", lista[posicao].nome, lista[posicao].rg);
+
   if (posicao < 0 || posicao >= *tamanho)
+  {
     printf("Posição inválida!\n");
+    return;
+  }
+
+  c++;
 
   tempo_inicio = clock();
 
   for (int i = posicao; i < *tamanho - 1; i++)
   {
+    c++;
     lista[i] = lista[i + 1];
     m++;
   }
@@ -233,8 +278,8 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
   m++;
 
   tempo_fim = clock();
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
@@ -242,6 +287,7 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
 /* Sequencial - procurar nó com campo RG na lista Sequencial */
 void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
 {
+  int i;
   int rg;
   printf("Insira o RG que deseja procurar: \n");
   scanf("%d", &rg);
@@ -249,24 +295,27 @@ void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
   tempo_inicio = clock();
   m++;
 
-  for (int i = 0; i < tamanho; i++)
+  for (i = 0; i < tamanho; i++)
   {
+    c++;
     if (lista[i].rg == rg)
     {
+      m++;
       printf("Pessoa encontrada: NOME: %s, RG: %d\n", lista[i].nome, lista[i].rg);
       tempo_fim = clock();
-      printf("Número de comparações: %d\n", c);
-      printf("Número de movimentações: %d\n", m);
+      numeros();
+      printf("posição na lista: %d\n", i);
       tempo();
       return;
     }
     c++;
   }
 
-  printf("RG %d não encontrado na lista.\n", rg);
+  m++;
+  
   tempo_fim = clock();
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  printf("RG %d não encontrado na lista.\n", rg);
+  numeros();
   tempo();
 }
 
@@ -339,6 +388,8 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
   int funcoes;
   while (1)
   {
+    m = 0;
+    c = 0;
     funcoes_texto();
     scanf("%d", &funcoes);
 
