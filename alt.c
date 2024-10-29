@@ -87,6 +87,7 @@ int contar_linhas(char *nome_arquivo)
 void inserir_inicio_sequencial(SeqPessoa *lista, int tamanho)
 {
   tempo_inicio = clock();
+  m++;
 
   SeqPessoa novaPessoaSequencial;
 
@@ -103,8 +104,29 @@ void inserir_inicio_sequencial(SeqPessoa *lista, int tamanho)
   
   lista[0] = novaPessoaSequencial;
   tamanho++;
+  m++;
 
   tempo_fim = clock();
+  m++;
+  
+  printf("NOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
+}
+
+void inserir_fim_sequencial(SeqPessoa *lista, int tamanho)
+{
+  SeqPessoa novaPessoaSequencial;
+
+  printf("Insira o nome da pessoa: \n");
+  scanf(" %10[^\n]", novaPessoaSequencial.nome);
+  printf("Insira o RG da pessoa: \n");
+  scanf("%d", &novaPessoaSequencial.rg);
+  
+  lista[tamanho] = novaPessoaSequencial;
+  tamanho++;
+  m++;
   
   printf("NOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
   printf("Número de comparações: %d\n", c);
@@ -145,7 +167,7 @@ void funcoes_sequencial(SeqPessoa *lista, int tamanho)
 
   switch (funcoes) {
     case 1: inserir_inicio_sequencial(lista, tamanho); break;
-    case 2: break;
+    case 2: inserir_fim_sequencial(lista, tamanho); break;
     case 3: break;
     case 4: break;
     case 5: break;
