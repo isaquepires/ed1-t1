@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <string.h>
 
 /* Para lidar um limite máximo de tamanho do nome da pessoa */
 #define TAM_NOME 10
@@ -634,6 +633,8 @@ void salvar_lista_encadeada(EncPessoa *inicio) {
   printf("Lista salva com sucesso em encadeada.txt!\n");
 }
 
+/*-----------------------------*/
+
 /* Sequencial - Preparar inicializando os tipos de dados e "lendo" os arquivos */
 void encadeada(FILE *arquivo)
 {
@@ -684,7 +685,8 @@ void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
       case 7: buscar_rg_encadeada(inicio); break;
       case 8: clear(); mostrar_encadeada(inicio); break;
       case 9: salvar_lista_encadeada(inicio); break;
-      case 10: break;
+      case 10:
+        break;
       case 11: printf("Saindo...\n"); exit(0);
       default: printf("Opção inválida!\n"); break;
     }
