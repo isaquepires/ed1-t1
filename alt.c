@@ -296,6 +296,21 @@ void salvar_lista_sequencial(SeqPessoa *lista, int tamanho) {
   printf("Lista salva com sucesso em sequencial.txt!\n");
 }
 
+/* --------------------------------------------------- */
+void ler_lista_sequencial(SeqPessoa *lista)
+{
+  int tamanho = 0;
+  FILE *arquivo = fopen("sequencial.txt", "r");
+
+  while (fscanf(arquivo, "%9[^,],%d\n", lista[tamanho].nome, &lista[tamanho].rg) == 2)
+    tamanho++;
+
+   fclose(arquivo);
+
+
+  return;
+}
+
 /* Sequencial - Preparar inicializando os tipos de dados e "lendo" os arquivos */
 void sequencial(FILE *arquivo, char *nome_arquivo)
 {
@@ -332,7 +347,7 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
       case 7: procurar_no_rg_sequencial(lista, *tamanho); break;
       case 8: clear(); mostrar_sequencial(lista, *tamanho); break;
       case 9: salvar_lista_sequencial(lista, *tamanho); break;
-      case 10:
+      case 10: ler_lista_sequencial(lista);
         break;
       case 11: printf("Saindo...\n"); exit(0);
       default: printf("Opção inválida!\n"); break;
