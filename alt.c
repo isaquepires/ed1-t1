@@ -183,8 +183,6 @@ void libera_encadeada(EncPessoa *inicio) {
   }
 }
 
-
-// ADICIONEI *ARQUIVO E *ATUAL COMO PARAMETROS APENAS PARA TESTAR MOSTRAR_ENCADEADA
 void inserir_inicio_encadeada(EncPessoa **inicio, FILE *arquivo)
 {
   tempo_inicio = clock();
