@@ -44,6 +44,7 @@ void clear()
   #endif
 }
 
+int tamanho = 0;
 /* Para exibir o texto presente no enunciado do trabalho */
 void funcoes_texto()
 {
@@ -62,18 +63,18 @@ void funcoes_texto()
   printf("Opção desejada: \n");
 }
 
-void funcoes_sequencial(SeqPessoa *lista, int dados);
+void funcoes_sequencial(SeqPessoa *lista, int *tamanho);
 int contar_linhas(char *nome_arquivo);
-void inserir_inicio_sequencial(SeqPessoa *lista, int tamanho);
+void inserir_inicio_sequencial(SeqPessoa *lista, int *tamanho);
 void mostrar_sequencial(SeqPessoa *lista, int tamanho);
 void sequencial(FILE *arquivo, char *nome_arquivo);
 EncPessoa* criar_no(char *nome, int rg);
 void libera_encadeada(EncPessoa *inicio);
 void inserir_inicio_encadeada(EncPessoa **inicio,  FILE *arquivo);
-void mostrar_encadeada(FILE *arquivo, EncPessoa *atual);
+void mostrar_encadeada(EncPessoa *atual);
 void encadeada(FILE *arquivo);
 void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio);
-void inserir_posicao_n_sequencial(SeqPessoa *lista, int tamanho);
+void inserir_posicao_n_sequencial(SeqPessoa *lista, int *tamanho);
 
 /* Contando quantas linhas um arquivo tem */
 int contar_linhas(char *nome_arquivo)
@@ -92,15 +93,18 @@ int contar_linhas(char *nome_arquivo)
   return linhas;
 }
 
+/* -------------------- LISTA SEQUENCIAL - INICIO -------------------------- */
+
 /* Sequencial - inserção de um nó no início da lista */
-void inserir_inicio_sequencial(SeqPessoa *lista, int tamanho)
+void inserir_inicio_sequencial(SeqPessoa *lista, int *tamanho)
 {
+  int i;
   tempo_inicio = clock();
   m++;
 
   SeqPessoa novaPessoaSequencial;
 
-  for (int i = tamanho; i > 0; i--)
+  for (i = *tamanho; i > 0; i--)
   {
     lista[i] = lista[i - 1];
     m++;
@@ -112,20 +116,20 @@ void inserir_inicio_sequencial(SeqPessoa *lista, int tamanho)
   scanf("%d", &novaPessoaSequencial.rg);
   
   lista[0] = novaPessoaSequencial;
-  tamanho++;
+  (*tamanho)++;
   m++;
 
   tempo_fim = clock();
   m++;
   
-  printf("NOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
+  printf("\nNOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
   printf("Número de comparações: %d\n", c);
   printf("Número de movimentações: %d\n", m);
   tempo();
 }
 
 /* Sequencial - inserção de um nó no fim da lista */
-void inserir_fim_sequencial(SeqPessoa *lista, int tamanho)
+void inserir_fim_sequencial(SeqPessoa *lista, int *tamanho)
 {
   SeqPessoa novaPessoaSequencial;
 
@@ -134,29 +138,29 @@ void inserir_fim_sequencial(SeqPessoa *lista, int tamanho)
   printf("Insira o RG da pessoa: \n");
   scanf("%d", &novaPessoaSequencial.rg);
   
-  lista[tamanho] = novaPessoaSequencial;
-  tamanho++;
+  lista[*tamanho] = novaPessoaSequencial;
+  (*tamanho)++;
   m++;
   
-  printf("NOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
+  printf("\nNOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
   printf("Número de comparações: %d\n", c);
   printf("Número de movimentações: %d\n", m);
   tempo();
 }
 
 /* Sequencial - inserção de um nó na posição N */
-void inserir_posicao_n_sequencial(SeqPessoa *lista, int tamanho)
+void inserir_posicao_n_sequencial(SeqPessoa *lista, int *tamanho)
 {
   int posicao;
 
-  printf("Em que posição deseja inserir os novos dados? (0 a %d): \n", tamanho);
+  printf("Em que posição deseja inserir os novos dados? (0 a %d): \n", *tamanho);
   scanf("%d", &posicao);
-  if (posicao < 0 || posicao > tamanho) {
+  if (posicao < 0 || posicao > *tamanho) {
     printf("Posição inválida!\n");
     return;
   }
 
-  for (int i = tamanho; i > posicao; i--) {
+  for (int i = *tamanho; i > posicao; i--) {
     lista[i] = lista[i - 1];
     m++;
   }
@@ -165,10 +169,44 @@ void inserir_posicao_n_sequencial(SeqPessoa *lista, int tamanho)
   scanf(" %10[^\n]", lista[posicao].nome);
   printf("Insira o RG da pessoa: \n");
   scanf("%d", &lista[posicao].rg); 
-  tamanho++;
+  (*tamanho)++;
+}
 
-  mostrar_sequencial(lista, tamanho);
+void retirar_no_inicio_sequencial(SeqPessoa *lista, int *tamanho)
+{
+  if (*tamanho == 0)
+    printf("A lista já está vazia.\n");
 
+  tempo_inicio = clock();
+
+  for (int i = 0; i < *tamanho - 1; i++) {
+    lista[i] = lista[i + 1];
+    m++;
+  }
+
+  m++;
+  (*tamanho)--;
+  tempo_fim = clock();
+
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
+}
+
+void retirar_fim_sequencial(SeqPessoa *lista, int *tamanho)
+{
+  if (*tamanho == 0)
+    printf("A lista já está vazia.\n");
+  
+  tempo_inicio = clock();
+  m++;
+  (*tamanho)--;
+
+  tempo_fim = clock();
+
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
 }
 
 /* Sequencial - Mostrar a lista na tela */
@@ -192,34 +230,46 @@ void sequencial(FILE *arquivo, char *nome_arquivo)
     tamanho++;
 
   fclose(arquivo);
-
-  funcoes_sequencial(lista, tamanho);
-
+  funcoes_sequencial(lista, &tamanho);
   free(lista);
 }
 
 /* Sequencial - Para o caso de decidir de qual função usar */
-void funcoes_sequencial(SeqPessoa *lista, int tamanho)
+void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
 {
   int funcoes;
-  funcoes_texto();
-  scanf("%d", &funcoes);
+  while (1)
+  {
+    funcoes_texto();
+    scanf("%d", &funcoes);
 
-  switch (funcoes) {
-    case 1: inserir_inicio_sequencial(lista, tamanho); break;
-    case 2: inserir_fim_sequencial(lista, tamanho); break;
-    case 3: inserir_posicao_n_sequencial(lista, tamanho); break;
-    case 4: break;
-    case 5: break;
-    case 6: break;
-    case 7: break;
-    case 8: clear(); mostrar_sequencial(lista, tamanho); break;
-    case 9: break;
-    case 10: break;
-    case 11: printf("Saindo...\n"); exit(0);
-    default: printf("Opção inválida!\n"); break;
+    switch (funcoes) {
+      case 1: inserir_inicio_sequencial(lista, tamanho); break;
+      case 2: inserir_fim_sequencial(lista, tamanho); break;
+      case 3: inserir_posicao_n_sequencial(lista, tamanho); break;
+      case 4: retirar_no_inicio_sequencial(lista, tamanho); break;
+      case 5: retirar_fim_sequencial(lista, tamanho); break;
+      case 6: break;
+      case 7: break;
+      case 8: clear(); mostrar_sequencial(lista, *tamanho); break;
+      case 9: break;
+      case 10: break;
+      case 11: printf("Saindo...\n"); exit(0);
+      default: printf("Opção inválida!\n"); break;
+    }
+
+    getchar();
+    printf("\nAperte qualquer tecla para voltar ao menu principal.\n");
+    getchar();
+    
+    clear();
   }
 }
+
+/* -------------------- LISTA SEQUENCIAL - FIM -------------------------- */
+
+/* -------------------- LISTA ENCADEADA - INICIO ------------------------ */
+
 
 /* Encadeada - Primeiro nó */
 EncPessoa* criar_no(char *nome, int rg)
@@ -263,7 +313,6 @@ void inserir_inicio_encadeada(EncPessoa **inicio, FILE *arquivo)
   
   printf("NOME: %s, RG: %d\n", nova_pessoa->nome, nova_pessoa->rg);
   
-  free(nova_pessoa);
   tempo_fim = clock();
   printf("Número de comparações: %d\n", c);
   printf("Número de movimentações: %d\n", m);
@@ -295,7 +344,7 @@ void inserir_fim_encadeada(EncPessoa **inicio)
   }
 
   printf("NOME: %s, RG: %d\n", nome, rg);
-}
+}  
 
 /* Encadeada - inserção de um nó na posição N */
 void inserir_posicao_n_encadeada(EncPessoa **inicio, FILE *arquivo)
@@ -338,11 +387,67 @@ void inserir_posicao_n_encadeada(EncPessoa **inicio, FILE *arquivo)
   atual->prox = nova_pessoa;
 
   printf("NOME: %s, RG: %d\n", nome, rg);
-  //mostrar_encadeada(arquivo, *inicio); ///////
+}
+
+void retirar_no_inicio_encadeada(EncPessoa **inicio)
+{
+  if (*inicio == NULL)
+    printf("A lista já está vazia.\n");
+  
+
+  tempo_inicio = clock();
+
+  EncPessoa *temp = *inicio;
+  
+  *inicio = (*inicio)->prox;
+  m++;
+  
+  free(temp);
+
+  tempo_fim = clock();
+
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
+}
+
+void retirar_no_fim_encadeada(EncPessoa **inicio)
+{
+  //EncPessoa *atual = NULL;
+
+  if (*inicio == NULL)
+    printf("A lista já está vazia.\n");
+
+  tempo_inicio = clock();
+
+  if ((*inicio)->prox == NULL)
+  {
+    free(*inicio);
+    *inicio = NULL;
+    m++;
+  }
+  else
+  {
+    EncPessoa *atual = *inicio;
+    while (atual->prox->prox != NULL)
+    {
+      atual = atual->prox;
+      c++;
+    }
+    
+    free(atual->prox);
+    atual->prox = NULL;
+    m++;
+  }
+
+  tempo_fim = clock();
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
 }
 
 /* Encadeada - Mostrar a lista na tela */
-void mostrar_encadeada(FILE *arquivo, EncPessoa *atual)
+void mostrar_encadeada(EncPessoa *atual)
 {
   while (atual != NULL) {
     printf("NOME: %s, RG: %d\n", atual->nome, atual->rg);
@@ -383,25 +488,37 @@ void encadeada(FILE *arquivo)
 void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
 {
   int funcoes;
-  funcoes_texto();
-  scanf("%d", &funcoes);
-  //EncPessoa *inicio = NULL;
 
-  switch (funcoes) {
-    case 1: inserir_inicio_encadeada(&inicio, arquivo); break;
-    case 2: inserir_fim_encadeada(&inicio); break;
-    case 3: inserir_posicao_n_encadeada(&inicio, arquivo); break;
-    case 4: break;
-    case 5: break;
-    case 6: break;
-    case 7: break;
-    case 8: clear(); mostrar_encadeada(arquivo, atual); break;
-    case 9: break;
-    case 10: break;
-    case 11: printf("Saindo...\n"); exit(0);
-    default: printf("Opção inválida!\n"); break;
+  while (1)
+  {
+    funcoes_texto();
+    scanf("%d", &funcoes);
+
+    switch (funcoes)
+    {
+      case 1: inserir_inicio_encadeada(&inicio, arquivo); break;
+      case 2: inserir_fim_encadeada(&inicio); break;
+      case 3: inserir_posicao_n_encadeada(&inicio, arquivo); break;
+      case 4: retirar_no_inicio_encadeada(&inicio); break;
+      case 5: retirar_no_fim_encadeada(&inicio); break;
+      case 6: break;
+      case 7: break;
+      case 8: clear(); mostrar_encadeada(inicio); break;
+      case 9: break;
+      case 10: break;
+      case 11: printf("Saindo...\n"); exit(0);
+      default: printf("Opção inválida!\n"); break;
+    }
+
+    getchar();
+    printf("\nAperte qualquer tecla para voltar ao menu principal.\n");
+    getchar();
+    
+    clear();
   }
 }
+
+/* -------------------- LISTA ENCADEADA - FIM --------------------------- */
 
 /* Abrindo arquivo texto... */
 FILE *abrir_aquivo(char *nome_arquivo)
@@ -472,7 +589,7 @@ int die()
 /* Uso: programa [ sequencial(e*) | encadeada(e*) ] */
 int main(int argc, char *argv[]) {
   char *nome_arquivo = NULL;
-  /* O argumento de tipo é sempre o segundo elemento, ou seja, o "1" */
+  /* O argumento é sempre o segundo elemento, o "1" */
   char *tipo_lista = argv[1];
   
   /* Manipulando erros de argumentos */
