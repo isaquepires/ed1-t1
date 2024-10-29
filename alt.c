@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 /* Para lidar um limite máximo de tamanho do nome da pessoa */
 #define TAM_NOME 10
@@ -268,6 +269,11 @@ void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
 /* Sequencial - Mostrar a lista na tela */
 void mostrar_sequencial(SeqPessoa *lista, int tamanho)
 {
+
+  if (tamanho == 0) {
+        printf("A lista está vazia.\n");
+        return;
+    }
   int contador;
   for (contador = 0; contador < tamanho; contador++)
     printf("NOME: %s, RG: %d\n", lista[contador].nome, lista[contador].rg);
@@ -326,7 +332,8 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
       case 7: procurar_no_rg_sequencial(lista, *tamanho); break;
       case 8: clear(); mostrar_sequencial(lista, *tamanho); break;
       case 9: salvar_lista_sequencial(lista, *tamanho); break;
-      case 10: break;
+      case 10:
+        break;
       case 11: printf("Saindo...\n"); exit(0);
       default: printf("Opção inválida!\n"); break;
     }
