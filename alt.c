@@ -6,6 +6,8 @@
 
 clock_t tempo_inicio;
 clock_t tempo_fim;
+int m = 0;
+int c = 0;
 double tempo_execucao;
 
 typedef struct
@@ -20,6 +22,13 @@ typedef struct EncPessoa
   int rg;
   struct EncPessoa *prox;
 } EncPessoa;
+
+void tempo()
+{
+  tempo_execucao = (double)(tempo_fim - tempo_inicio) / CLOCKS_PER_SEC;
+  printf("Tempo de execução: %.6f segundos\n", tempo_execucao);
+}
+
 
 void clear()
 {
@@ -46,6 +55,7 @@ void funcoes_texto()
   printf("11) Sair do sistema.\n\n");
   printf("Opção desejada: \n");
 }
+
 void funcoes_sequencial(SeqPessoa *lista, int dados);
 int contar_linhas(char *nome_arquivo);
 void inserir_inicio_sequencial(SeqPessoa *lista, int tamanho);
@@ -53,7 +63,7 @@ void mostrar_sequencial(SeqPessoa *lista, int tamanho);
 void sequencial(FILE *arquivo, char *nome_arquivo);
 EncPessoa* no(char *nome, int rg);
 void libera_encadeada(EncPessoa *inicio);
-void inserir_inicio_encadeada(EncPessoa **inicio,  FILE *arquivo, EncPessoa *atual);
+void inserir_inicio_encadeada(EncPessoa **inicio,  FILE *arquivo);
 void mostrar_encadeada(FILE *arquivo, EncPessoa *atual);
 void encadeada(FILE *arquivo);
 void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio);
@@ -76,8 +86,6 @@ int contar_linhas(char *nome_arquivo)
 
 void inserir_inicio_sequencial(SeqPessoa *lista, int tamanho)
 {
-  int m = 0;
-  int c = 0;
   tempo_inicio = clock();
 
   SeqPessoa novaPessoaSequencial;
@@ -88,22 +96,20 @@ void inserir_inicio_sequencial(SeqPessoa *lista, int tamanho)
     m++;
   }
 
-  printf("Insira o nome para inserir: \n");
+  printf("Insira o nome da pessoa: \n");
   scanf(" %10[^\n]", novaPessoaSequencial.nome);
-  printf("Insira o RG para inserir (até 8 dígitos): \n");
+  printf("Insira o RG da pessoa (até 8 dígitos): \n");
   scanf("%d", &novaPessoaSequencial.rg);
   
   lista[0] = novaPessoaSequencial;
   tamanho++;
 
   tempo_fim = clock();
-
-  tempo_execucao = (double)(tempo_fim - tempo_inicio) / CLOCKS_PER_SEC;
   
   printf("NOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
   printf("Número de comparações: %d\n", c);
   printf("Número de movimentações: %d\n", m);
-  printf("Tempo de execução: %.6f segundos\n", tempo_execucao);
+  tempo();
 }
 
 void mostrar_sequencial(SeqPessoa *lista, int tamanho)
@@ -179,20 +185,26 @@ void libera_encadeada(EncPessoa *inicio) {
 
 
 // ADICIONEI *ARQUIVO E *ATUAL COMO PARAMETROS APENAS PARA TESTAR MOSTRAR_ENCADEADA
-void inserir_inicio_encadeada(EncPessoa **inicio, FILE *arquivo, EncPessoa *atual)
+void inserir_inicio_encadeada(EncPessoa **inicio, FILE *arquivo)
 {
+  tempo_inicio = clock();
   EncPessoa *nova_pessoa = (EncPessoa*)malloc(sizeof(EncPessoa));
   
-  //printf("Insira o nome da pessoa: ");
+  printf("Insira o nome da pessoa: \n");
   scanf(" %10[^\n]", nova_pessoa->nome);
-  //printf("Insira o RG da pessoa: ");
+  printf("Insira o RG da pessoa: \n");
   scanf("%d", &nova_pessoa->rg);
 
   nova_pessoa->prox = *inicio;
   *inicio = nova_pessoa;
-
-  mostrar_encadeada(arquivo, *inicio);
-
+  
+  printf("NOME: %s, RG: %d\n", nova_pessoa->nome, nova_pessoa->rg);
+  
+  tempo_fim = clock();
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
+  //mostrar_encadeada(arquivo, *inicio);
 }
 
 void mostrar_encadeada(FILE *arquivo, EncPessoa *atual)
@@ -239,7 +251,7 @@ void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
   //EncPessoa *inicio = NULL;
 
   switch (funcoes) {
-    case 1: inserir_inicio_encadeada(&inicio, arquivo, atual); break;
+    case 1: inserir_inicio_encadeada(&inicio, arquivo); break;
     case 2: break;
     case 3: break;
     case 4: break;
