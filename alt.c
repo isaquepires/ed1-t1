@@ -172,6 +172,7 @@ void inserir_posicao_n_sequencial(SeqPessoa *lista, int *tamanho)
   (*tamanho)++;
 }
 
+/* Sequencial - retirar nó do início da lista sequencial */
 void retirar_no_inicio_sequencial(SeqPessoa *lista, int *tamanho)
 {
   if (*tamanho == 0)
@@ -193,7 +194,8 @@ void retirar_no_inicio_sequencial(SeqPessoa *lista, int *tamanho)
   tempo();
 }
 
-void retirar_fim_sequencial(SeqPessoa *lista, int *tamanho)
+/* Sequencial - Retirar nó do fim da lista sequencial */
+void retirar_no_fim_sequencial(SeqPessoa *lista, int *tamanho)
 {
   if (*tamanho == 0)
     printf("A lista já está vazia.\n");
@@ -209,6 +211,7 @@ void retirar_fim_sequencial(SeqPessoa *lista, int *tamanho)
   tempo();
 }
 
+/* Sequencial - retirar nó na posição n da lista sequencial */
 void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
   int posicao;
 
@@ -235,6 +238,8 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
   tempo();
 }
 
+
+/* Sequencial - procurar nó com campo RG na lista Sequencial */
 void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
 {
   int rg;
@@ -278,6 +283,7 @@ void mostrar_sequencial(SeqPessoa *lista, int tamanho)
     printf("NOME: %s, RG: %d\n", lista[contador].nome, lista[contador].rg);
 }
 
+/* Sequencial - salvar lista sequencial em um arquivo */
 void salvar_lista_sequencial(SeqPessoa *lista, int tamanho) {
   FILE *arquivo;
   arquivo = fopen("sequencial.txt", "w");
@@ -295,17 +301,17 @@ void salvar_lista_sequencial(SeqPessoa *lista, int tamanho) {
   printf("Lista salva com sucesso em sequencial.txt!\n");
 }
 
-/* --------------------------------------------------- */
-void ler_lista_sequencial(SeqPessoa *lista)
+/* Sequencial - Ler a lista de um arquivo e colocar na lista */
+void ler_lista_sequencial(SeqPessoa *lista, int *tamanho)
 {
-  int tamanho = 0;
+  /* Zerando o tamanho da lista */
+  *tamanho = 0;
   FILE *arquivo = fopen("sequencial.txt", "r");
 
-  while (fscanf(arquivo, "%9[^,],%d\n", lista[tamanho].nome, &lista[tamanho].rg) == 2)
-    tamanho++;
+  while (fscanf(arquivo, "%9[^,],%d\n", lista[*tamanho].nome, &lista[*tamanho].rg) == 2)
+    (*tamanho)++;
 
-   fclose(arquivo);
-
+  fclose(arquivo);
 
   return;
 }
@@ -341,13 +347,12 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
       case 2: inserir_fim_sequencial(lista, tamanho); break;
       case 3: inserir_posicao_n_sequencial(lista, tamanho); break;
       case 4: retirar_no_inicio_sequencial(lista, tamanho); break;
-      case 5: retirar_fim_sequencial(lista, tamanho); break;
+      case 5: retirar_no_fim_sequencial(lista, tamanho); break;
       case 6: retirar_no_posicao_n_sequencial(lista, tamanho); break;
       case 7: procurar_no_rg_sequencial(lista, *tamanho); break;
       case 8: clear(); mostrar_sequencial(lista, *tamanho); break;
       case 9: salvar_lista_sequencial(lista, *tamanho); break;
-      case 10: ler_lista_sequencial(lista);
-        break;
+      case 10: ler_lista_sequencial(lista, tamanho); break;
       case 11: printf("Saindo...\n"); exit(0);
       default: printf("Opção inválida!\n"); break;
     }
@@ -482,11 +487,11 @@ void inserir_posicao_n_encadeada(EncPessoa **inicio, FILE *arquivo)
   printf("NOME: %s, RG: %d\n", nome, rg);
 }
 
+/* Encadeada - retirar nó do início da lista encadeada */
 void retirar_no_inicio_encadeada(EncPessoa **inicio)
 {
   if (*inicio == NULL)
     printf("A lista já está vazia.\n");
-  
 
   tempo_inicio = clock();
 
@@ -504,6 +509,7 @@ void retirar_no_inicio_encadeada(EncPessoa **inicio)
   tempo();
 }
 
+/* Encadeada - Retirar nó do fim da lista encadeada */
 void retirar_no_fim_encadeada(EncPessoa **inicio)
 {
   //EncPessoa *atual = NULL;
@@ -539,6 +545,7 @@ void retirar_no_fim_encadeada(EncPessoa **inicio)
   tempo();
 }
 
+/* Encadeada - retirar nó na posição n da lista encadeada */
 void retirar_no_posicao_n_encadeada(EncPessoa **inicio) {
   int posicao;
   printf("Em que posição deseja retirar o dado?: \n");
@@ -577,7 +584,8 @@ void retirar_no_posicao_n_encadeada(EncPessoa **inicio) {
   free(atual);
 }
 
-void buscar_rg_encadeada(EncPessoa *inicio) {
+/* Encadeada - procurar nó com campo RG na lista encadeada */
+void procurar_no_rg_encadeada(EncPessoa *inicio) {
   int rg;
   printf("Digite o RG que deseja procurar: \n");
   scanf("%d", &rg);
@@ -612,6 +620,7 @@ void mostrar_encadeada(EncPessoa *atual)
   }
 }
 
+/* Encadeada - salvar lista encadeada em um arquivo */
 void salvar_lista_encadeada(EncPessoa *inicio) {
   FILE *arquivo;
   arquivo = fopen("encadeada.txt", "w");
@@ -633,7 +642,33 @@ void salvar_lista_encadeada(EncPessoa *inicio) {
   printf("Lista salva com sucesso em encadeada.txt!\n");
 }
 
-/*-----------------------------*/
+void ler_lista_encadeada(EncPessoa **inicio)
+{
+  /* ... */
+  *inicio = NULL;
+  EncPessoa *ultimo = NULL;
+  FILE *arquivo = fopen("encadeada.txt", "r");
+  if (arquivo == NULL) {
+    printf("Erro ao abrir o arquivo!\n");
+    return;
+  }
+
+  char nome[TAM_NOME];
+  int rg;
+
+  while (fscanf(arquivo, "%9[^,],%d\n", nome, &rg) == 2) {
+    EncPessoa *novaPessoa = criar_no(nome, rg);
+    if (*inicio == NULL) {
+        *inicio = novaPessoa;  // Primeiro nó
+      } else {
+        ultimo->prox = novaPessoa;  // Conecta o último ao novo nó
+      }
+        ultimo = novaPessoa;  // Atualiza o ponteiro para o último nó
+  }
+  
+
+  fclose(arquivo);
+}
 
 /* Sequencial - Preparar inicializando os tipos de dados e "lendo" os arquivos */
 void encadeada(FILE *arquivo)
@@ -682,10 +717,11 @@ void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
       case 4: retirar_no_inicio_encadeada(&inicio); break;
       case 5: retirar_no_fim_encadeada(&inicio); break;
       case 6: retirar_no_posicao_n_encadeada(&inicio); break;
-      case 7: buscar_rg_encadeada(inicio); break;
+      case 7: procurar_no_rg_encadeada(inicio); break;
       case 8: clear(); mostrar_encadeada(inicio); break;
       case 9: salvar_lista_encadeada(inicio); break;
       case 10:
+        ler_lista_encadeada(&inicio);
         break;
       case 11: printf("Saindo...\n"); exit(0);
       default: printf("Opção inválida!\n"); break;
