@@ -61,12 +61,13 @@ int contar_linhas(char *nome_arquivo);
 void inserir_inicio_sequencial(SeqPessoa *lista, int tamanho);
 void mostrar_sequencial(SeqPessoa *lista, int tamanho);
 void sequencial(FILE *arquivo, char *nome_arquivo);
-EncPessoa* no(char *nome, int rg);
+EncPessoa* criar_no(char *nome, int rg);
 void libera_encadeada(EncPessoa *inicio);
 void inserir_inicio_encadeada(EncPessoa **inicio,  FILE *arquivo);
 void mostrar_encadeada(FILE *arquivo, EncPessoa *atual);
 void encadeada(FILE *arquivo);
 void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio);
+void inserir_posicao_n_sequencial(SeqPessoa *lista, int tamanho);
 
 int contar_linhas(char *nome_arquivo)
 {
@@ -134,6 +135,32 @@ void inserir_fim_sequencial(SeqPessoa *lista, int tamanho)
   tempo();
 }
 
+void inserir_posicao_n_sequencial(SeqPessoa *lista, int tamanho)
+{
+  int posicao;
+
+  printf("Em que posição deseja inserir os novos dados? (0 a %d): \n", tamanho);
+  scanf("%d", &posicao);
+  if (posicao < 0 || posicao > tamanho) {
+    printf("Posição inválida!\n");
+    return;
+  }
+
+  for (int i = tamanho; i > posicao; i--) {
+    lista[i] = lista[i - 1];
+    m++;
+  }
+
+  printf("Insira o nome da pessoa: \n");
+  scanf(" %10[^\n]", lista[posicao].nome);
+  printf("Insira o RG da pessoa: \n");
+  scanf("%d", &lista[posicao].rg); 
+  tamanho++;
+
+  mostrar_sequencial(lista, tamanho);
+
+}
+
 void mostrar_sequencial(SeqPessoa *lista, int tamanho)
 {
   int contador;
@@ -168,7 +195,7 @@ void funcoes_sequencial(SeqPessoa *lista, int tamanho)
   switch (funcoes) {
     case 1: inserir_inicio_sequencial(lista, tamanho); break;
     case 2: inserir_fim_sequencial(lista, tamanho); break;
-    case 3: break;
+    case 3: inserir_posicao_n_sequencial(lista, tamanho); break;
     case 4: break;
     case 5: break;
     case 6: break;
@@ -181,7 +208,7 @@ void funcoes_sequencial(SeqPessoa *lista, int tamanho)
   }
 }
 
-EncPessoa* no(char *nome, int rg)
+EncPessoa* criar_no(char *nome, int rg)
 {
   EncPessoa *nova_pessoa = (EncPessoa*)malloc(sizeof(EncPessoa));
   
@@ -220,10 +247,79 @@ void inserir_inicio_encadeada(EncPessoa **inicio, FILE *arquivo)
   
   printf("NOME: %s, RG: %d\n", nova_pessoa->nome, nova_pessoa->rg);
   
+  free(nova_pessoa);
   tempo_fim = clock();
   printf("Número de comparações: %d\n", c);
   printf("Número de movimentações: %d\n", m);
   tempo();
+}
+
+void inserir_fim_encadeada(EncPessoa **inicio)
+{
+  char nome[10];
+  int rg;
+
+  printf("Insira o nome da pessoa: \n");
+  scanf(" %10[^\n]", nome);
+  printf("Insira o RG da pessoa: \n");
+  scanf("%d", &rg);
+
+  EncPessoa *novaPessoa = criar_no(nome, rg);
+
+  if (*inicio == NULL)
+    *inicio = novaPessoa;
+  else
+  {
+    EncPessoa *atual = *inicio;
+    while (atual->prox != NULL)
+      atual = atual->prox;
+
+    atual->prox = novaPessoa;
+  }
+
+  printf("NOME: %s, RG: %d\n", nome, rg);
+}
+
+void inserir_posicao_n_encadeada(EncPessoa **inicio, FILE *arquivo)
+{
+  char nome[10];
+  int rg, posicao;
+
+  printf("Em que posição deseja inserir os novos dados: \n");
+  scanf("%d", &posicao);
+  printf("Insira o nome da pessoa: \n");
+  scanf(" %10[^\n]", nome);
+  printf("Insira o RG da pessoa: \n");
+  scanf("%d", &rg);
+
+  EncPessoa *nova_pessoa = criar_no(nome, rg);
+
+  if (posicao == 0) {
+    nova_pessoa->prox = *inicio;
+    *inicio = nova_pessoa;
+    m++;
+    return;
+  }
+
+  EncPessoa *atual = *inicio;
+  int contador = 0;
+
+  while (atual != NULL && contador < posicao - 1) {
+    atual = atual->prox;
+    contador++;
+    c++;
+  }
+
+  if (atual == NULL) {
+    printf("Posição inválida!\n");
+    free(nova_pessoa);
+    return;
+  }
+
+  nova_pessoa->prox = atual->prox;
+  atual->prox = nova_pessoa;
+
+  printf("NOME: %s, RG: %d\n", nome, rg);
   //mostrar_encadeada(arquivo, *inicio);
 }
 
@@ -244,7 +340,7 @@ void encadeada(FILE *arquivo)
 
   while (fscanf(arquivo, "%9[^,],%d\n", nome, &rg) == 2)
   {
-    EncPessoa *nova_pessoa = no(nome, rg);
+    EncPessoa *nova_pessoa = criar_no(nome, rg);
   
     if (inicio == NULL)
       inicio = nova_pessoa;
@@ -272,8 +368,8 @@ void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
 
   switch (funcoes) {
     case 1: inserir_inicio_encadeada(&inicio, arquivo); break;
-    case 2: break;
-    case 3: break;
+    case 2: inserir_fim_encadeada(&inicio); break;
+    case 3: inserir_posicao_n_encadeada(&inicio, arquivo); break;
     case 4: break;
     case 5: break;
     case 6: break;
