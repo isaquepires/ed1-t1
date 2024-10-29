@@ -29,7 +29,7 @@ typedef struct EncPessoa
 
 /* Calcula o tempo de execução */
 void tempo()
-{
+{ 
   tempo_execucao = (double)(tempo_fim - tempo_inicio) / CLOCKS_PER_SEC;
   printf("Tempo de execução: %.6f segundos\n", tempo_execucao);
 }
@@ -209,6 +209,62 @@ void retirar_fim_sequencial(SeqPessoa *lista, int *tamanho)
   tempo();
 }
 
+void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
+  int posicao;
+
+  printf("Em que posição deseja retirar o dado? (0 a %d): \n", *tamanho - 1);
+  scanf("%d", &posicao);
+
+  if (posicao < 0 || posicao >= *tamanho)
+    printf("Posição inválida!\n");
+
+  tempo_inicio = clock();
+
+  for (int i = posicao; i < *tamanho - 1; i++)
+  {
+    lista[i] = lista[i + 1];
+    m++;
+  }
+
+  (*tamanho)--;
+  m++;
+
+  tempo_fim = clock();
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
+}
+
+void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
+{
+  int rg;
+  printf("Insira o RG que deseja procurar: \n");
+  scanf("%d", &rg);
+    
+  tempo_inicio = clock();
+  m++;
+
+  for (int i = 0; i < tamanho; i++)
+  {
+    if (lista[i].rg == rg)
+    {
+      printf("Pessoa encontrada: NOME: %s, RG: %d\n", lista[i].nome, lista[i].rg);
+      tempo_fim = clock();
+      printf("Número de comparações: %d\n", c);
+      printf("Número de movimentações: %d\n", m);
+      tempo();
+      return;
+    }
+    c++;
+  }
+
+  printf("RG %d não encontrado na lista.\n", rg);
+  tempo_fim = clock();
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
+}
+
 /* Sequencial - Mostrar a lista na tela */
 void mostrar_sequencial(SeqPessoa *lista, int tamanho)
 {
@@ -249,8 +305,8 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
       case 3: inserir_posicao_n_sequencial(lista, tamanho); break;
       case 4: retirar_no_inicio_sequencial(lista, tamanho); break;
       case 5: retirar_fim_sequencial(lista, tamanho); break;
-      case 6: break;
-      case 7: break;
+      case 6: retirar_no_posicao_n_sequencial(lista, tamanho); break;
+      case 7: procurar_no_rg_sequencial(lista, *tamanho); break;
       case 8: clear(); mostrar_sequencial(lista, *tamanho); break;
       case 9: break;
       case 10: break;
@@ -269,7 +325,6 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
 /* -------------------- LISTA SEQUENCIAL - FIM -------------------------- */
 
 /* -------------------- LISTA ENCADEADA - INICIO ------------------------ */
-
 
 /* Encadeada - Primeiro nó */
 EncPessoa* criar_no(char *nome, int rg)
@@ -446,6 +501,70 @@ void retirar_no_fim_encadeada(EncPessoa **inicio)
   tempo();
 }
 
+void retirar_no_posicao_n_encadeada(EncPessoa **inicio) {
+  int posicao;
+  printf("Em que posição deseja retirar o dado?: \n");
+  scanf("%d", &posicao);
+
+  if (*inicio == NULL)
+  {
+    printf("A lista já está vazia.\n");
+    return;
+  }
+
+  if (posicao == 0) {
+    retirar_no_inicio_encadeada(inicio);
+    return;
+  }
+
+  EncPessoa *atual = *inicio;
+  EncPessoa *anterior = NULL;
+  int contador = 0;
+
+  while (atual != NULL && contador < posicao)
+  {
+    anterior = atual;
+    atual = atual->prox;
+    contador++;
+    c++;
+  }
+
+  if (atual == NULL)
+  {
+    printf("Posição inválida!\n");
+    return;
+  }
+
+  anterior->prox = atual->prox;
+  free(atual);
+}
+
+void buscar_rg_encadeada(EncPessoa *inicio) {
+  int rg;
+  printf("Digite o RG que deseja procurar: \n");
+  scanf("%d", &rg);
+
+  tempo_inicio = clock();
+  EncPessoa *atual = inicio;
+
+  while (atual != NULL)
+  {
+    c++;
+    if (atual->rg == rg)
+    {
+      printf("Pessoa encontrada: NOME: %s, RG: %d\n", atual->nome, atual->rg);
+      tempo_fim = clock();
+      tempo();
+      return;
+    }
+    atual = atual->prox;
+  }
+    
+  printf("Pessoa com RG: %d não encontrada.\n", rg);
+  tempo_fim = clock(); // Finalizar contagem do tempo
+  tempo(); // Calcular e exibir o tempo de execução
+}
+
 /* Encadeada - Mostrar a lista na tela */
 void mostrar_encadeada(EncPessoa *atual)
 {
@@ -501,8 +620,8 @@ void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
       case 3: inserir_posicao_n_encadeada(&inicio, arquivo); break;
       case 4: retirar_no_inicio_encadeada(&inicio); break;
       case 5: retirar_no_fim_encadeada(&inicio); break;
-      case 6: break;
-      case 7: break;
+      case 6: retirar_no_posicao_n_encadeada(&inicio); break;
+      case 7: buscar_rg_encadeada(inicio); break;
       case 8: clear(); mostrar_encadeada(inicio); break;
       case 9: break;
       case 10: break;
