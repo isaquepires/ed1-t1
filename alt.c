@@ -9,8 +9,9 @@
 clock_t tempo_inicio;
 clock_t tempo_fim;
 double tempo_execucao;
-int m = 0; // movimentações
-int c = 0; // comparações
+
+int m = 0; // lidando com movimentações
+int c = 0; // lidando com comparações
 
 /* Tipo pessoa para sequencial */
 typedef struct
@@ -27,14 +28,14 @@ typedef struct EncPessoa
   struct EncPessoa *prox;
 } EncPessoa;
 
-/* Calcula o tempo de execução */
+/* Calcula e mostra o tempo de execução */
 void tempo()
 { 
   tempo_execucao = (double)(tempo_fim - tempo_inicio) / CLOCKS_PER_SEC;
   printf("Tempo de execução: %.6f segundos\n", tempo_execucao);
 }
 
-/* Limpar tela, windows e linux (unix) */
+/* Limpando a tela, windows e linux (unix) */
 void clear()
 {
   #ifdef _WIN32
@@ -44,8 +45,7 @@ void clear()
   #endif
 }
 
-int tamanho = 0;
-/* Para exibir o texto presente no enunciado do trabalho */
+/* Somente para exibir o texto presente no enunciado do trabalho */
 void funcoes_texto()
 {
   printf("Selecione entre as funções abaixo: \n\n");
@@ -63,42 +63,35 @@ void funcoes_texto()
   printf("Opção desejada: \n");
 }
 
+/* Declarando o protótipo das duas funções de lista principais */
 void funcoes_sequencial(SeqPessoa *lista, int *tamanho);
-int contar_linhas(char *nome_arquivo);
-void inserir_inicio_sequencial(SeqPessoa *lista, int *tamanho);
-void mostrar_sequencial(SeqPessoa *lista, int tamanho);
-void sequencial(FILE *arquivo, char *nome_arquivo);
-EncPessoa* criar_no(char *nome, int rg);
-void libera_encadeada(EncPessoa *inicio);
-void inserir_inicio_encadeada(EncPessoa **inicio,  FILE *arquivo);
-void mostrar_encadeada(EncPessoa *atual);
-void encadeada(FILE *arquivo);
 void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio);
-void inserir_posicao_n_sequencial(SeqPessoa *lista, int *tamanho);
 
-/* Contando quantas linhas um arquivo tem */
+/* Para contar quantas linhas um determinado arquivo tem */
 int contar_linhas(char *nome_arquivo)
 {
   FILE *arquivo;
   arquivo = fopen(nome_arquivo, "r");
   int linhas = 0;
   char caractere;
-
+  
   while ((caractere = getc(arquivo)) != EOF)
+  {
     c++;
     if (caractere == '\n')
     {
       linhas++;
       m++;
     }
+  }
   fclose(arquivo);
 
   return linhas;
 }
 
+/* exibindo numeros de comparações e movimentações */
 void numeros()
 {
-  //printf("\nNOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
   printf("Número de comparações: %d\n", c);
   printf("Número de movimentações: %d\n", m);
 }
@@ -283,19 +276,45 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
   tempo();
 }
 
-
-/* Sequencial - procurar nó com campo RG na lista Sequencial */
-void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
+void procurar_no_rg(SeqPessoa *lista, int tamanho)
 {
-  int i;
   int rg;
   printf("Insira o RG que deseja procurar: \n");
   scanf("%d", &rg);
     
   tempo_inicio = clock();
   m++;
+  for (int i = 0; i < tamanho; i++)
+  {
+    if (lista[i].rg == rg)
+    {
+      printf("Pessoa encontrada: NOME: %s, RG: %d\n", lista[i].nome, lista[i].rg);
+      tempo_fim = clock();
+      printf("Número de comparações: %d\n", c);
+      printf("Número de movimentações: %d\n", m);
+      tempo();
+      return;
+    }
+    c++;
+  }
+  printf("RG %d não encontrado na lista.\n", rg);
+  tempo_fim = clock();
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
+}
 
-  for (i = 0; i < tamanho; i++)
+/* Sequencial - procurar nó com campo RG na lista Sequencial */
+void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
+{
+
+  int rg;
+  printf("Insira o RG que deseja procurar: \n");
+  scanf("%d", &rg);
+    
+  tempo_inicio = clock();
+
+  for (int i = 0; i < tamanho; i++)
   {
     c++;
     if (lista[i].rg == rg)
@@ -308,10 +327,7 @@ void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
       tempo();
       return;
     }
-    c++;
   }
-
-  m++;
   
   tempo_fim = clock();
   printf("RG %d não encontrado na lista.\n", rg);
@@ -322,11 +338,6 @@ void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
 /* Sequencial - Mostrar a lista na tela */
 void mostrar_sequencial(SeqPessoa *lista, int tamanho)
 {
-
-  if (tamanho == 0) {
-        printf("A lista está vazia.\n");
-        return;
-    }
   int contador;
   for (contador = 0; contador < tamanho; contador++)
     printf("NOME: %s, RG: %d\n", lista[contador].nome, lista[contador].rg);
@@ -347,7 +358,7 @@ void salvar_lista_sequencial(SeqPessoa *lista, int tamanho) {
     fprintf(arquivo, "%s,%d\n", lista[i].nome, lista[i].rg);
     
   fclose(arquivo);
-  printf("Lista salva com sucesso em sequencial.txt!\n");
+  printf("Lista salva com sucesso como 'sequencial.txt!'\n");
 }
 
 /* Sequencial - Ler a lista de um arquivo e colocar na lista */
@@ -369,15 +380,17 @@ void ler_lista_sequencial(SeqPessoa *lista, int *tamanho)
 void sequencial(FILE *arquivo, char *nome_arquivo)
 {
   int tamanho = 0;
-
+  
+  /* Definindo a quantidade de linhas do arquivo para alocar memória suficiente */
   int linhas = contar_linhas(nome_arquivo);
   
   SeqPessoa *lista = malloc(linhas*sizeof(SeqPessoa));
-
+  
   while (fscanf(arquivo, "%9[^,],%d\n", lista[tamanho].nome, &lista[tamanho].rg) == 2)
     tamanho++;
 
   fclose(arquivo);
+
   funcoes_sequencial(lista, &tamanho);
   free(lista);
 }
@@ -417,7 +430,6 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
 }
 
 /* -------------------- LISTA SEQUENCIAL - FIM -------------------------- */
-
 /* -------------------- LISTA ENCADEADA - INICIO ------------------------ */
 
 /* Encadeada - Primeiro nó */
@@ -449,9 +461,11 @@ void libera_encadeada(EncPessoa *inicio) {
 /* Encadeada - inserção de um nó no início da lista */
 void inserir_inicio_encadeada(EncPessoa **inicio, FILE *arquivo)
 {
+  int posicao = 0;
   tempo_inicio = clock();
   EncPessoa *nova_pessoa = (EncPessoa*)malloc(sizeof(EncPessoa));
-  
+  m++;
+
   printf("Insira o nome da pessoa: \n");
   scanf(" %10[^\n]", nova_pessoa->nome);
   printf("Insira o RG da pessoa: \n");
@@ -459,19 +473,21 @@ void inserir_inicio_encadeada(EncPessoa **inicio, FILE *arquivo)
 
   nova_pessoa->prox = *inicio;
   *inicio = nova_pessoa;
-  
-  printf("NOME: %s, RG: %d\n", nova_pessoa->nome, nova_pessoa->rg);
+  m++;
   
   tempo_fim = clock();
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  printf("NOME: %s, RG: %d\n", nova_pessoa->nome, nova_pessoa->rg);
+  printf("posição na lista: %d\n", posicao);
+  numeros();
   tempo();
 }
 
 /* Encadeada - inserção de um nó no fim da lista */
 void inserir_fim_encadeada(EncPessoa **inicio)
 {
-  char nome[10];
+  int posicao = 0;
+  tempo_inicio = clock();
+  char nome[TAM_NOME];
   int rg;
 
   printf("Insira o nome da pessoa: \n");
@@ -480,25 +496,39 @@ void inserir_fim_encadeada(EncPessoa **inicio)
   scanf("%d", &rg);
 
   EncPessoa *novaPessoa = criar_no(nome, rg);
+  m++;
 
+  c++;
   if (*inicio == NULL)
+  {
     *inicio = novaPessoa;
+  }
   else
   {
     EncPessoa *atual = *inicio;
+    m++;
     while (atual->prox != NULL)
+    {
       atual = atual->prox;
+      m++;
+      posicao++;
+    }
 
     atual->prox = novaPessoa;
   }
 
+  tempo_fim = clock();
   printf("NOME: %s, RG: %d\n", nome, rg);
+  printf("posição na lista: %d\n", posicao);
+  numeros();
+  tempo();
 }  
 
 /* Encadeada - inserção de um nó na posição N */
 void inserir_posicao_n_encadeada(EncPessoa **inicio, FILE *arquivo)
 {
-  char nome[10];
+  tempo_inicio = clock();
+  char nome[TAM_NOME];
   int rg, posicao;
 
   printf("Em que posição deseja inserir os novos dados: \n");
@@ -509,8 +539,10 @@ void inserir_posicao_n_encadeada(EncPessoa **inicio, FILE *arquivo)
   scanf("%d", &rg);
 
   EncPessoa *nova_pessoa = criar_no(nome, rg);
+  m++;
 
   if (posicao == 0) {
+    c++;
     nova_pessoa->prox = *inicio;
     *inicio = nova_pessoa;
     m++;
@@ -535,18 +567,34 @@ void inserir_posicao_n_encadeada(EncPessoa **inicio, FILE *arquivo)
   nova_pessoa->prox = atual->prox;
   atual->prox = nova_pessoa;
 
+  tempo_fim = clock();
+
   printf("NOME: %s, RG: %d\n", nome, rg);
+  printf("posição na lista: %d\n", posicao);
+  numeros();
+  tempo();
 }
 
 /* Encadeada - retirar nó do início da lista encadeada */
 void retirar_no_inicio_encadeada(EncPessoa **inicio)
 {
-  if (*inicio == NULL)
-    printf("A lista já está vazia.\n");
-
+  char nome[TAM_NOME];
+  int rg, posicao = 0;
   tempo_inicio = clock();
+  if (*inicio == NULL)
+  {
+    printf("A lista já está vazia.\n");
+  }
+  c++;
 
+  for (int i = 0; i < TAM_NOME; i++) {
+    nome[i] = (*inicio)->nome[i];
+  }
+
+  rg = (*inicio)->rg;
   EncPessoa *temp = *inicio;
+  m++;
+
   
   *inicio = (*inicio)->prox;
   m++;
@@ -554,9 +602,9 @@ void retirar_no_inicio_encadeada(EncPessoa **inicio)
   free(temp);
 
   tempo_fim = clock();
-
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  printf("NOME: %s, RG: %d\n", nome, rg);
+  printf("posição na lista: %d\n", posicao);
+  numeros();
   tempo();
 }
 
@@ -564,6 +612,7 @@ void retirar_no_inicio_encadeada(EncPessoa **inicio)
 void retirar_no_fim_encadeada(EncPessoa **inicio)
 {
   //EncPessoa *atual = NULL;
+  tempo_inicio = clock();
 
   if (*inicio == NULL)
     printf("A lista já está vazia.\n");
@@ -591,8 +640,9 @@ void retirar_no_fim_encadeada(EncPessoa **inicio)
   }
 
   tempo_fim = clock();
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  //printf("NOME: %s, RG: %d\n", nome, rg);
+  //printf("posição na lista: %d\n", posicao);
+  numeros();
   tempo();
 }
 
@@ -637,7 +687,7 @@ void retirar_no_posicao_n_encadeada(EncPessoa **inicio) {
 
 /* Encadeada - procurar nó com campo RG na lista encadeada */
 void procurar_no_rg_encadeada(EncPessoa *inicio) {
-  int rg;
+  int rg, posicao = 0;
   printf("Digite o RG que deseja procurar: \n");
   scanf("%d", &rg);
 
@@ -646,10 +696,12 @@ void procurar_no_rg_encadeada(EncPessoa *inicio) {
 
   while (atual != NULL)
   {
+    posicao++;
     c++;
     if (atual->rg == rg)
     {
       printf("Pessoa encontrada: NOME: %s, RG: %d\n", atual->nome, atual->rg);
+      printf("%d\n", posicao);
       tempo_fim = clock();
       tempo();
       return;
@@ -757,6 +809,8 @@ void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
 
   while (1)
   {
+    m = 0;
+    c = 0;
     funcoes_texto();
     scanf("%d", &funcoes);
 
@@ -771,9 +825,7 @@ void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
       case 7: procurar_no_rg_encadeada(inicio); break;
       case 8: clear(); mostrar_encadeada(inicio); break;
       case 9: salvar_lista_encadeada(inicio); break;
-      case 10:
-        ler_lista_encadeada(&inicio);
-        break;
+      case 10: ler_lista_encadeada(&inicio); break;
       case 11: printf("Saindo...\n"); exit(0);
       default: printf("Opção inválida!\n"); break;
     }
@@ -806,10 +858,6 @@ char* opcoes_arquivos()
   printf("Opção de arquivo desejado: \n");
   scanf("%d", &numero_arquivo);
 
-  /* Limpando o input buffer para evitar
-  os erros com o uso de caracteres extras */
-  //while (getchar() != '\n');
-
   switch (numero_arquivo)
   {
     case 1:
@@ -840,39 +888,33 @@ char* opcoes_arquivos()
       printf("Opção inválida!\n");
       exit(1);
   }
-  
   clear();
 
   return nome_arquivo;
 }
 
-/* Para erros, fazendo a execução "morrer", exibindo mensagem de uso */
-int die()
+/* Fazendo a execução "morrer", exibindo mensagem de erro e de uso */
+int die(char *mensagem)
 {
-  printf("Uso: programa [ sequencial(e*) | encadeada(e*) ].\n");
+  printf("%s\n", mensagem);
+  printf("Uso: programa [ sequencial(s*) | encadeada(e*) ].\n");
   exit(1);
 }
 
 /* Função principal e seus parametros */
-/* Uso: programa [ sequencial(e*) | encadeada(e*) ] */
 int main(int argc, char *argv[]) {
   char *nome_arquivo = NULL;
+
   /* O argumento é sempre o segundo elemento, o "1" */
   char *tipo_lista = argv[1];
   
   /* Manipulando erros de argumentos */
   if (argc == 1)
-  {
-    printf("Não há argumentos, é preciso especificar o tipo de lista!\n");
-    die();
-  }
+    die("Não há argumentos, é preciso especificar o tipo de lista!");
   else if (argc > 2)
-  {
-    printf("Há argumentos demais, use apenas um argumento por vez!\n");
-    die();
-  }
+    die("Há argumentos demais, use apenas um argumento por vez!");
     
-  /* Selecionando o primeiro caractere do argumento */
+  /* Selecionando o primeiro caractere do argumento como tipo de lista escolhida */
   switch (tipo_lista[0])
   {
     /* Para a lista sequencial */
@@ -893,8 +935,7 @@ int main(int argc, char *argv[]) {
       break;
     /* Para qualquer outro argumento */
     default:
-      printf("Argumentos inválido!\n");
-      die();
+      die("Argumentos inválido!");
   }
 
   return 0;
