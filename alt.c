@@ -293,8 +293,6 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
   tempo();
 }
 
-/* COMENTEI ATÉ AQUI ------------------------------------ */
-
 /* Sequencial - procurar nó com campo RG na lista Sequencial */
 void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
 {
@@ -787,6 +785,8 @@ void retirar_no_posicao_n_encadeada(EncPessoa **inicio) {
   numeros();
   tempo();
 }
+
+/* COMENTEI ATÉ AQUI -------------------- */
 
 /* Encadeada - procurar nó com campo RG na lista encadeada */
 void procurar_no_rg_encadeada(EncPessoa *inicio) {
