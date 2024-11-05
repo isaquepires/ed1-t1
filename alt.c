@@ -75,9 +75,12 @@ int contar_linhas(char *nome_arquivo)
   int linhas = 0;
   char caractere;
   
+  /* enquanto não encontrar o fim do arquivo */
   while ((caractere = getc(arquivo)) != EOF)
   {
     c++;
+
+    /* contando linhas a cada nova quebra de linha */
     if (caractere == '\n')
     {
       linhas++;
@@ -89,7 +92,7 @@ int contar_linhas(char *nome_arquivo)
   return linhas;
 }
 
-/* exibindo numeros de comparações e movimentações */
+/* Exibindo numeros de comparações e movimentações */
 void numeros()
 {
   printf("Número de comparações: %d\n", c);
@@ -104,24 +107,28 @@ void inserir_inicio_sequencial(SeqPessoa *lista, int *tamanho)
   int i, posicao = 0;
   tempo_inicio = clock();
 
+  /* nova instância de pessoa */
   SeqPessoa novaPessoaSequencial;
 
+  /* percorrendo do final para o início */
   for (i = *tamanho; i > 0; i--)
   {
     c++;
+
+    /* deslocando os elementos para a 'direita' */
     lista[i] = lista[i - 1];
     m++;
   }
-
+  
   printf("Insira o nome da pessoa: \n");
   scanf(" %10[^\n]", novaPessoaSequencial.nome);
   printf("Insira o RG da pessoa (até 8 dígitos): \n");
   scanf("%d", &novaPessoaSequencial.rg);
   
+  /* inserindo no início da lista */
   lista[posicao] = novaPessoaSequencial;
   m++;
   (*tamanho)++;
-  m++;
 
   tempo_fim = clock();
   printf("\nNOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
@@ -142,9 +149,10 @@ void inserir_fim_sequencial(SeqPessoa *lista, int *tamanho)
   printf("Insira o RG da pessoa: \n");
   scanf("%d", &novaPessoaSequencial.rg);
   
+  /* nova instância de pessoa no fim da lista */
   lista[*tamanho] = novaPessoaSequencial;
-  (*tamanho)++;
   m++;
+  (*tamanho)++;
     
   tempo_fim = clock();
   printf("\nNOME: %s, RG: %d\n", novaPessoaSequencial.nome, novaPessoaSequencial.rg);
@@ -158,27 +166,33 @@ void inserir_posicao_n_sequencial(SeqPessoa *lista, int *tamanho)
 {
   int posicao;
   tempo_inicio = clock();
-
+  
+  /* leitura de posição desejada para inserção */
   printf("Em que posição deseja inserir os novos dados? (0 a %d): \n", *tamanho);
   scanf("%d", &posicao);
-  if (posicao < 0 || posicao > *tamanho) {
+  
+  /* verificando se está dentro dos limites da lista */
+  if (posicao < 0 || posicao > *tamanho)
+  {
     c++;
     printf("Posição inválida!\n");
     return;
   }
 
-  for (int i = *tamanho; i > posicao; i--) {
+  /* deslocando elementos para a 'direita' */
+  for (int i = *tamanho; i > posicao; i--) 
+  {
     c++;
     lista[i] = lista[i - 1];
     m++;
   }
-
+  
   printf("Insira o nome da pessoa: \n");
   scanf(" %10[^\n]", lista[posicao].nome);
   printf("Insira o RG da pessoa: \n");
-  scanf("%d", &lista[posicao].rg); 
+  scanf("%d", &lista[posicao].rg);
+
   (*tamanho)++;
-  m++;
   
   printf("\nNOME: %s, RG: %d\n", lista[posicao].nome, lista[posicao].rg);
   tempo_fim = clock();
@@ -196,19 +210,20 @@ void retirar_no_inicio_sequencial(SeqPessoa *lista, int *tamanho)
 
   printf("\nNOME: %s, RG: %d\n", lista[posicao].nome, lista[posicao].rg);
   
-  if (*tamanho == 0){
+  if (*tamanho == 0)
+  {
     printf("A lista já está vazia.\n");
     return;
   }
   c++;
-
+  
+  /* Move todos os elementos para a esquerda */
   for (int i = 0; i < *tamanho - 1; i++) {
     c++;
     lista[i] = lista[i + 1];
     m++;
   }
 
-  m++;
   (*tamanho)--;
 
   tempo_fim = clock();
@@ -231,7 +246,6 @@ void retirar_no_fim_sequencial(SeqPessoa *lista, int *tamanho)
   tempo_inicio = clock();
   m++;
   (*tamanho)--;
-  m++;
 
   printf("\nNOME: %s, RG: %d\n", lista[*tamanho].nome, lista[*tamanho].rg);
   tempo_fim = clock();
@@ -249,7 +263,8 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
   scanf("%d", &posicao);
 
   printf("\nNOME: %s, RG: %d\n", lista[posicao].nome, lista[posicao].rg);
-
+  
+  /* verifica entre os limites da lista */
   if (posicao < 0 || posicao >= *tamanho)
   {
     printf("Posição inválida!\n");
@@ -259,16 +274,18 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
   c++;
 
   tempo_inicio = clock();
-
+  
+  /* remove o elemento na posição especificada */
   for (int i = posicao; i < *tamanho - 1; i++)
   {
     c++;
+
+    /* move o próximo elemento para a posição atual */
     lista[i] = lista[i + 1];
     m++;
   }
 
   (*tamanho)--;
-  m++;
 
   tempo_fim = clock();
   numeros();
@@ -276,39 +293,14 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho) {
   tempo();
 }
 
-void procurar_no_rg(SeqPessoa *lista, int tamanho)
-{
-  int rg;
-  printf("Insira o RG que deseja procurar: \n");
-  scanf("%d", &rg);
-    
-  tempo_inicio = clock();
-  m++;
-  for (int i = 0; i < tamanho; i++)
-  {
-    if (lista[i].rg == rg)
-    {
-      printf("Pessoa encontrada: NOME: %s, RG: %d\n", lista[i].nome, lista[i].rg);
-      tempo_fim = clock();
-      printf("Número de comparações: %d\n", c);
-      printf("Número de movimentações: %d\n", m);
-      tempo();
-      return;
-    }
-    c++;
-  }
-  printf("RG %d não encontrado na lista.\n", rg);
-  tempo_fim = clock();
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
-  tempo();
-}
+/* COMENTEI ATÉ AQUI ------------------------------------ */
 
 /* Sequencial - procurar nó com campo RG na lista Sequencial */
 void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
 {
 
   int rg;
+  int posicao = 0;
   printf("Insira o RG que deseja procurar: \n");
   scanf("%d", &rg);
     
@@ -317,13 +309,14 @@ void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
   for (int i = 0; i < tamanho; i++)
   {
     c++;
+    posicao = i;
     if (lista[i].rg == rg)
     {
       m++;
       printf("Pessoa encontrada: NOME: %s, RG: %d\n", lista[i].nome, lista[i].rg);
       tempo_fim = clock();
       numeros();
-      printf("posição na lista: %d\n", i);
+      printf("posição na lista: %d\n", posicao);
       tempo();
       return;
     }
@@ -439,8 +432,10 @@ EncPessoa* criar_no(char *nome, int rg)
   
   int i;
   for (i = 0; nome[i] != '\0'; i++)
+  {
+    c++;
     nova_pessoa->nome[i] = nome[i];
-
+  }
   nova_pessoa->nome[i] = '\0';
   nova_pessoa->rg = rg;
   nova_pessoa->prox = NULL;
@@ -687,21 +682,20 @@ void retirar_no_posicao_n_encadeada(EncPessoa **inicio) {
 
 /* Encadeada - procurar nó com campo RG na lista encadeada */
 void procurar_no_rg_encadeada(EncPessoa *inicio) {
-  int rg, posicao = 0;
+  int rg, posicao;
   printf("Digite o RG que deseja procurar: \n");
   scanf("%d", &rg);
 
   tempo_inicio = clock();
   EncPessoa *atual = inicio;
 
-  while (atual != NULL)
+  for (posicao = 0; atual != NULL; posicao++)
   {
-    posicao++;
     c++;
     if (atual->rg == rg)
     {
       printf("Pessoa encontrada: NOME: %s, RG: %d\n", atual->nome, atual->rg);
-      printf("%d\n", posicao);
+      printf("posição na lista: %d\n", posicao);
       tempo_fim = clock();
       tempo();
       return;
