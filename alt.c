@@ -13,14 +13,14 @@ double tempo_execucao;
 int m = 0; // lidando com movimentações
 int c = 0; // lidando com comparações
 
-/* Tipo pessoa para sequencial */
+/* Definindo tipo para a lista sequencial */
 typedef struct
 {
   char nome[TAM_NOME];
   int rg;
 } SeqPessoa;
 
-/* Tipo pessoa para a encadeada */
+/* Definindo tipo para a lista encadeada */
 typedef struct EncPessoa
 {
   char nome[TAM_NOME];
@@ -509,15 +509,15 @@ void inserir_inicio_encadeada(EncPessoa **inicio, FILE *arquivo)
   
   tempo_fim = clock();
   printf("NOME: %s, RG: %d\n", nova_pessoa->nome, nova_pessoa->rg);
-  printf("posição na lista: %d\n", posicao);
   numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
 /* Encadeada - inserção de um nó no fim da lista */
 void inserir_fim_encadeada(EncPessoa **inicio)
 {
-  int posicao = 0;
+  int posicao = 1;
   tempo_inicio = clock();
   char nome[TAM_NOME];
   int rg;
@@ -557,8 +557,8 @@ void inserir_fim_encadeada(EncPessoa **inicio)
 
   tempo_fim = clock();
   printf("NOME: %s, RG: %d\n", nome, rg);
-  printf("posição na lista: %d\n", posicao);
   numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }  
 
@@ -617,8 +617,8 @@ void inserir_posicao_n_encadeada(EncPessoa **inicio, FILE *arquivo)
   tempo_fim = clock();
 
   printf("NOME: %s, RG: %d\n", nome, rg);
-  printf("posição na lista: %d\n", posicao);
   numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
@@ -655,8 +655,8 @@ void retirar_no_inicio_encadeada(EncPessoa **inicio)
 
   tempo_fim = clock();
   printf("NOME: %s, RG: %d\n", nome, rg);
-  printf("posição na lista: %d\n", posicao);
   numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
@@ -710,8 +710,8 @@ void retirar_no_fim_encadeada(EncPessoa **inicio)
 
   tempo_fim = clock();
   printf("NOME: %s, RG: %d\n", nome, rg);
-  printf("posição na lista: %d\n", posicao);
   numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
@@ -781,8 +781,8 @@ void retirar_no_posicao_n_encadeada(EncPessoa **inicio) {
 
   tempo_fim = clock();
   printf("NOME: %s, RG: %d\n", nome, rg);
-  printf("posição na lista: %d\n", posicao);
   numeros();
+  printf("posição na lista: %d\n", posicao);
   tempo();
 }
 
