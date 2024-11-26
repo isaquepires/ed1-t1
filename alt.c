@@ -466,6 +466,78 @@ void sequencial(FILE *arquivo, char *nome_arquivo)
   free(lista);
 }
 
+void merge(SeqPessoa *lista, int inicio, int meio, int fim) {
+    int n1 = meio - inicio + 1; // Tamanho da sublista esquerda
+    int n2 = fim - meio;        // Tamanho da sublista direita
+
+    // Sublistas temporárias
+    SeqPessoa *esq = (SeqPessoa *)malloc(n1 * sizeof(SeqPessoa));
+    SeqPessoa *dir = (SeqPessoa *)malloc(n2 * sizeof(SeqPessoa));
+
+    // Copia os elementos para as sublistas
+    for (int i = 0; i < n1; i++) {
+        esq[i] = lista[inicio + i];
+        m++;
+    }
+    for (int j = 0; j < n2; j++) {
+        dir[j] = lista[meio + 1 + j];
+        m++;
+    }
+
+    // Índices para iterar nas sublistas e na lista principal
+    int i = 0, j = 0, k = inicio;
+
+    // Combina as duas sublistas
+    while (i < n1 && j < n2) {
+        c++;
+        if (esq[i].rg <= dir[j].rg) {
+            lista[k] = esq[i];
+            m++;
+            i++;
+        } else {
+            lista[k] = dir[j];
+            m++;
+            j++;
+        }
+        k++;
+    }
+
+    // Copia os elementos restantes da sublista esquerda, se houver
+    while (i < n1) {
+        lista[k] = esq[i];
+        m++;
+        i++;
+        k++;
+    }
+
+    // Copia os elementos restantes da sublista direita, se houver
+    while (j < n2) {
+        lista[k] = dir[j];
+        m++;
+        j++;
+        k++;
+    }
+
+    // Libera a memória alocada para as sublistas
+    free(esq);
+    free(dir);
+}
+
+void merge_sort(SeqPessoa *lista, int inicio, int fim) {
+    if (inicio < fim) {
+        int meio = inicio + (fim - inicio) / 2;
+
+        // Ordena a sublista esquerda
+        merge_sort(lista, inicio, meio);
+
+        // Ordena a sublista direita
+        merge_sort(lista, meio + 1, fim);
+
+        // Combina as duas sublistas ordenadas
+        merge(lista, inicio, meio, fim);
+    }
+}
+
 /* Sequencial - Para o caso de decidir de qual função usar */
 void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
 {
@@ -496,6 +568,7 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
       case 11: selection_sort(lista, *tamanho);  break;
       case 12: insertion_sort_sequencial(lista, *tamanho); break;
       case 13: printf("Saindo...\n"); exit(0);
+      case 14: merge_sort(lista, 0, *tamanho - 1); break;
       default: printf("Opção inválida!\n"); break;
     }
     
