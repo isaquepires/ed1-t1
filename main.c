@@ -10,8 +10,8 @@ clock_t tempo_inicio;
 clock_t tempo_fim;
 double tempo_execucao;
 
-int m = 0; // lidando com movimentações
-int c = 0; // lidando com comparações
+long long int m = 0; // lidando com movimentações
+long long int c = 0; // lidando com comparações
 
 /* Definindo tipo para a lista sequencial */
 typedef struct
@@ -108,8 +108,8 @@ int contar_linhas(char *nome_arquivo)
 /* Exibindo numeros de comparações e movimentações */
 void numeros()
 {
-  printf("Número de comparações: %d\n", c);
-  printf("Número de movimentações: %d\n", m);
+  printf("Número de comparações: %lld\n", c);
+  printf("Número de movimentações: %lld\n", m);
 }
 
 /* -------------------- LISTA SEQUENCIAL - INICIO -------------------------- */
@@ -419,9 +419,13 @@ void procurar_no_rg_binaria(SeqPessoa *lista, int tamanho)
   tempo_fim = clock();
 
   if (posicao != -1)
+  {
     printf("Pessoa encontrada: NOME: %s, RG: %d\n", lista[posicao].nome, lista[posicao].rg);
+    c++;
+  }
   else
   {
+    c++;
     printf("RG %d não encontrado na lista.\n", rg);
     exit(0);
   }
@@ -430,6 +434,13 @@ void procurar_no_rg_binaria(SeqPessoa *lista, int tamanho)
   printf("Número de movimentações: %d\n", m);
   printf("posição na lista: %d\n", posicao);
   tempo();
+}
+
+void trocar_variaveis(SeqPessoa *uma, SeqPessoa *outra)
+{
+  SeqPessoa temp = *uma;
+  *uma = *outra;
+  *outra = temp;
 }
 
 /* SELECTION SORT - SEQUENCIAL */
@@ -468,9 +479,7 @@ void selection_sort(SeqPessoa *lista, int tamanho)
     if (menor_rg != i)
     {
       c++;
-      SeqPessoa temp = lista[i];
-      lista[i] = lista[menor_rg];
-      lista[menor_rg] = temp;
+      trocar_variaveis(&lista[i], &lista[menor_rg]);
       m += 3;
     }
   }
@@ -545,10 +554,8 @@ void bubble_sort_sequencial(SeqPessoa *lista, int tamanho)
       if (lista[i].rg > lista[i + 1].rg)
       {
         c++;
-        SeqPessoa temp = lista[i];
-        lista[i] = lista[i + 1];
-        lista[i + 1] = temp;
-        m+=3;
+        trocar_variaveis(&lista[i], &lista[i + 1]);
+        m += 3;
 
         /* marcando que houve troca */
         trocou = 1;
@@ -600,7 +607,7 @@ void shell_sort_sequencial(SeqPessoa *lista, int tamanho)
         c++;
 
         lista[j] = lista[j - h];
-        m++;
+m++;
 
         j -= h;
         m++;
@@ -616,11 +623,43 @@ void shell_sort_sequencial(SeqPessoa *lista, int tamanho)
   tempo();
 }
 
+int mediana(SeqPessoa *lista, int inicio, int fim, int *c, int *m)
+{
+  int meio = (inicio + fim)/2;
+
+  if (lista[inicio].rg > lista[meio].rg)
+  {
+    (*c)++;
+    trocar_variaveis(&lista[inicio], &lista[meio]);
+    (*m) +=3 ;
+  }
+  if (lista[inicio].rg > lista[fim].rg)
+  {
+    (*c)++;
+    trocar_variaveis(&lista[inicio], &lista[fim]);
+    (*m) += 3;
+  }
+  if (lista[meio].rg > lista[fim].rg)
+  {
+    (*c)++;
+    trocar_variaveis(&lista[meio], &lista[fim]);
+    (*m) += 3;
+  }
+  
+  trocar_variaveis(&lista[meio], &lista[fim]);
+  (*m) += 3;
+
+  
+  return fim;
+}
+
 /* QUICK SORT - SEQUENCIAL - dividir, manipular e definir o pivo */
 int dividir(SeqPessoa *lista, int inicio, int fim,  int *c, int *m)
 {
   /* define o ultimo rg da lista como pivo */
-  SeqPessoa pivo = lista[fim];
+  //SeqPessoa pivo = lista[fim];
+  int indice = mediana(lista, inicio, fim, c, m);
+  SeqPessoa pivo = lista[indice];
   SeqPessoa temp;
   int i = inicio, j;
   
@@ -635,9 +674,7 @@ int dividir(SeqPessoa *lista, int inicio, int fim,  int *c, int *m)
       (*c)++;
         
       /* realiza a troca */
-      temp = lista[i];
-      lista[i] = lista[j];
-      lista[j] = temp;
+      trocar_variaveis(&lista[i], &lista[j]);
       (*m) += 3;
       
       /* o indice avanca */ 
@@ -813,7 +850,6 @@ void merge_sort_sequencial(SeqPessoa *lista, int tamanho)
   printf("Número de movimentações: %d\n", m);
   tempo();
 }
-
 
 /* Sequencial - Mostrar a lista na tela */
 void mostrar_sequencial(SeqPessoa *lista, int tamanho)
