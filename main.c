@@ -625,7 +625,7 @@ m++;
 
 int mediana(SeqPessoa *lista, int inicio, int fim, int *c, int *m)
 {
-  int meio = (inicio + fim)/2;
+  int meio = inicio + (fim - inicio) / 2;
 
   if (lista[inicio].rg > lista[meio].rg)
   {
@@ -649,15 +649,13 @@ int mediana(SeqPessoa *lista, int inicio, int fim, int *c, int *m)
   trocar_variaveis(&lista[meio], &lista[fim]);
   (*m) += 3;
 
-  
   return fim;
 }
 
 /* QUICK SORT - SEQUENCIAL - dividir, manipular e definir o pivo */
 int dividir(SeqPessoa *lista, int inicio, int fim,  int *c, int *m)
 {
-  /* define o ultimo rg da lista como pivo */
-  //SeqPessoa pivo = lista[fim];
+  /* define a mediana rg da lista como pivo */
   int indice = mediana(lista, inicio, fim, c, m);
   SeqPessoa pivo = lista[indice];
   SeqPessoa temp;
@@ -783,26 +781,6 @@ void merge(SeqPessoa *lista, int inicio, int meio, int fim, int *c, int *m)
     (*m)++;
 
     /* avança o índice atual */
-    k++;
-  }
-  
-  /* se houver, passa copiando os dados restantes da sublista da esquerda */
-  while (i < lista_esq)
-  {
-    (*c)++;
-    lista[k] = esquerda[i];
-    (*m)++;
-    i++;
-    k++;
-  }
-  
-  /* se houver, passa copiando os dados restantes da sublista da esquerda */
-  while (j < lista_dir)
-  {
-    (*c)++;
-    lista[k] = direita[j];
-    (*m)++;
-    j++;
     k++;
   }
   
