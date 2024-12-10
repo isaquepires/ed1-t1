@@ -56,11 +56,23 @@ void funcoes_texto()
   printf(" 5) Retirar um nó no fim da lista.\n");
   printf(" 6) Retirar um nó na posição N.\n");
   printf(" 7) Procurar um nó com o campo RG (busca sequencial).\n");
-  printf(" 8) Mostrar a lista na tela.\n");
-  printf(" 9) Salvar a lista em um arquivo (nome,RG).\n");
-  printf("10) Ler a lista de um arquivo. (nome,RG) (lista)\n");
-  printf("11) Sair do sistema.\n\n");
+}
+
+void funcoes_texto_trabalho2()
+{
+  printf(" 8) Procurar um nó com o campo RG (busca binária).\n");
+  printf(" 9) Selection Sort.\n");
+  printf(" 10) Insertion-Sort\n");
+  printf(" 11) Bubble-Sort\n");
+  printf(" 12) Shell-Sort\n");
+  printf(" 13) Quick-Sort\n");
+  printf(" 14) Merge-Sort\n");
+  printf(" 15) Mostrar a lista na tela.\n");
+  printf(" 16) Salvar a lista em um arquivo (nome,RG).\n");
+  printf(" 17) Ler a lista de um arquivo. (nome,RG) (lista)\n");
+  printf(" 18) Sair do sistema.\n\n");
   printf("Opção desejada: \n");
+  
 }
 
 /* Declarando o protótipo das duas funções de lista principais */
@@ -311,7 +323,7 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho)
   tempo();
 }
 
-/* Sequencial - procurar nó com campo RG na lista Sequencial */
+/* Sequencial - procurar nó com campo RG na lista Sequencial (Pesquisa Pequencial) */
 void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
 {
 
@@ -347,6 +359,321 @@ void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
   m++;
   printf("RG %d não encontrado na lista.\n", rg);
   numeros();
+  tempo();
+}
+
+/* Sequencial - Pesquisa Binária - Recursividade */
+int busca_binaria_recursiva(SeqPessoa *lista, int inicio, int fim, int rg, int *c, int *m)
+{
+  /* contando ponteiro de movimentações */
+  (*m)++;
+    
+  /* para no caso do inicio ultrapassar, não encontrou o rg procurado */
+  if (inicio > fim)
+  {
+    /* contando ponteiro de comparações */
+    (*c)++;
+    return -1;
+  }
+    
+  /* procura indice do meio da lista */
+  int meio = inicio + (fim - inicio) / 2;
+  (*c)++;
+  (*m)++;
+
+  /* verifica se o RG do meio é o procurado */
+  if (lista[meio].rg == rg)
+  {
+    (*c)++;
+    return meio;
+  }
+
+  /* se o RG procurado for menor, procura na metade esquerda */
+  if (lista[meio].rg > rg)
+  {
+    (*c)++;
+    return busca_binaria_recursiva(lista, inicio, meio - 1, rg, c, m);
+  }
+
+  /* senão, procura na metade direita */
+  return busca_binaria_recursiva(lista, meio + 1, fim, rg, c, m);
+}
+
+/* Sequencial - procurar nó com campo RG na lista Sequencial (Pesquisa Binária) */
+void procurar_no_rg_binaria(SeqPessoa *lista, int tamanho)
+{
+  int rg;
+  printf("Insira o RG que deseja procurar: \n");
+  scanf("%d", &rg);
+
+  int c = 0, m = 0;
+
+  tempo_inicio = clock();
+  
+  /* buscando rg recursivamente na lista contabilizando c e m */
+  int posicao = busca_binaria_recursiva(lista, 0, tamanho - 1, rg, &c, &m);
+  
+  tempo_fim = clock();
+
+  if (posicao != -1)
+    printf("Pessoa encontrada: NOME: %s, RG: %d\n", lista[posicao].nome, lista[posicao].rg);
+  else
+  {
+    printf("RG %d não encontrado na lista.\n", rg);
+    exit(0);
+  }
+
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  printf("posição na lista: %d\n", posicao);
+  tempo();
+}
+
+/* SELECTION SORT - SEQUENCIAL */
+void selection_sort(SeqPessoa *lista, int tamanho)
+{
+  int menor_rg;
+
+  tempo_inicio = clock();
+  
+  /* percorre a lista para colocar os RGs em ordem */
+  for (int i = 0; i < tamanho - 1; i++)
+  {
+    c++;
+
+    /* assume que o menor elemento está na posição i */
+    menor_rg = i;
+    m++;
+    
+    /* procura o menor elemento no a partindo de i até o fim */
+    for (int j = i + 1; j < tamanho; j++)
+    {
+      c++;
+
+      /* verifica se o rg atual é menor que o menor encontrado, caso sim troca*/
+      if (lista[j].rg < lista[menor_rg].rg)
+      {
+        c++;
+        menor_rg = j;
+        m++;
+      }
+    }
+        
+    /* se o menor_rg mudou, troca os elementos para colocar o menor na posição i */
+    if (menor_rg != i)
+    {
+      c++;
+      SeqPessoa temp = lista[i];
+      lista[i] = lista[menor_rg];
+      lista[menor_rg] = temp;
+      m += 3;
+    }
+  }
+
+  tempo_fim = clock();
+  numeros();
+  tempo();
+}
+
+/* INSERTION SORT - SEQUENCIAL */
+void insertion_sort_sequencial(SeqPessoa *lista, int tamanho)
+{
+  tempo_inicio = clock();
+
+  /* percorre a lista toda ordenando */
+  for (int i = 1; i < tamanho; i++)
+  {
+    c++;
+
+    /* rg a ser inserido na posição correta */
+    SeqPessoa chave = lista[i];
+    m++;
+
+    int j = i - 1;
+    m++;
+
+    /* desloca os elementos maiores que chave para a direita */
+    while (j >= 0 && lista[j].rg > chave.rg)
+    {
+      c++;
+
+      lista[j + 1] = lista[j];
+      m++;
+      
+      j--;
+    }
+
+    /* insere o elemento na posição correta */
+    lista[j + 1] = chave;
+    m++;
+  }
+
+  tempo_fim = clock();
+  numeros();
+  tempo();
+}
+
+/* BUBBLE SORT - SEQUENCIAL */
+void bubble_sort_sequencial(SeqPessoa *lista, int tamanho)
+{
+  int trocou, i, j;
+  tempo_inicio = clock();
+
+  /* percorrendo desde o inicio da lista ate o seu fim */
+  for (j = 0; j < tamanho - 1; j++)
+  {
+    c++;
+
+    /* flag para verificar se houve troca */
+    trocou = 0;
+
+    /* passa comparando os elementos adjacentes */
+    for (i = 0; i < tamanho - 1 - j; i++)
+    {
+      c++;
+      
+      /* se o rg atual for maior que o próximo havera troca entre eles */
+      if (lista[i].rg > lista[i + 1].rg)
+      {
+        c++;
+        SeqPessoa temp = lista[i];
+        lista[i] = lista[i + 1];
+        lista[i + 1] = temp;
+        m+=3;
+
+        /* marcando que houve troca */
+        trocou = 1;
+      }
+    }
+    
+    /* se não houve troca, a lista já está ordenada */
+    if (!trocou)
+    {
+      c++;
+      break;
+    }
+  }
+
+  tempo_fim = clock();
+  numeros();
+  tempo();
+}
+
+/* SHELL SORT - SEQUENCIAL */
+void shell_sort_sequencial(SeqPessoa *lista, int tamanho)
+{
+  int h, i, j;
+  SeqPessoa chave;
+
+  tempo_inicio = clock();
+
+  /* inicializa o intervalo como a metade do tamanho da lista */
+  for (h = tamanho / 2; h > 0; h /= 2)
+  {
+    c++;
+
+    /* faz o Insertion Sort para cada intervalo */
+    for (i = h; i < tamanho; i++)
+    {
+      c++;
+
+      chave = lista[i];
+      m++;
+
+      j = i;
+      m++;
+
+      /* move os elementos para a posição correta dentro do intervalo */
+      while (j >= h && lista[j - h].rg > chave.rg)
+      {
+        c++;
+
+        lista[j] = lista[j - h];
+        m++;
+
+        j -= h;
+        m++;
+      }
+
+      lista[j] = chave;
+      m++;
+    }
+  }
+
+  tempo_fim = clock();
+  numeros();
+  tempo();
+}
+
+/* QUICK SORT - SEQUENCIAL - dividir, manipular e definir o pivo */
+int dividir(SeqPessoa *lista, int inicio, int fim,  int *c, int *m)
+{
+  /* define o ultimo rg da lista como pivo */
+  SeqPessoa pivo = lista[fim];
+  SeqPessoa temp;
+  int i = inicio, j;
+  
+  /* j parte percorrendo a lista */
+  for (j = inicio; j < fim; j++)
+  {
+    (*c)++;
+    
+    /* compara o rg do elemento atual com o do pivo */
+    if (lista[j].rg <= pivo.rg)
+    {
+      (*c)++;
+        
+      /* realiza a troca */
+      temp = lista[i];
+      lista[i] = lista[j];
+      lista[j] = temp;
+      (*m) += 3;
+      
+      /* o indice avanca */ 
+      i += 1;
+    }
+  }
+  
+  /* quando chegar no fim da lista realiza a troca do pivo */
+  temp = lista[i];
+  lista[i] = lista[fim];
+  lista[fim] = temp;
+  (*m) += 3;
+
+  return i;
+}
+
+/* QUICK SORT - SEQUENCIAL - ordenar recursivamente a lista */
+void quicksort(SeqPessoa *lista, int inicio, int fim,  int *c, int *m)
+{
+  int pivo;
+
+  /* verifica se a sublista tem mais de um rg */
+  if (inicio < fim)
+  {
+    /* divide a lista em duas indicando o pivo */
+    pivo = dividir(lista, inicio, fim, c, m);
+
+    /* ordena sublista da esquerda */
+    quicksort(lista, inicio, pivo - 1, c, m);
+
+    /* ordena sublista da direita */
+    quicksort(lista, pivo + 1, fim, c, m);
+  }
+}
+
+/* QUICK SORT - SEQUENCIAL - para manipular tempo e contabilizar c e m */
+void quick_sort_sequencial(SeqPessoa *lista, int tamanho)
+{
+  int c = 0, m = 0;
+  tempo_inicio = clock();
+    
+  /* realiza o quicksort na lista contabilizando c e m */
+  quicksort(lista, 0, tamanho - 1, &c, &m);
+
+  tempo_fim = clock();
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
   tempo();
 }
 
@@ -430,6 +757,7 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
     
     /* exibindo o menu do texto */
     funcoes_texto();
+    funcoes_texto_trabalho2();
 
     scanf("%d", &funcoes);
 
@@ -442,10 +770,17 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
       case 5: retirar_no_fim_sequencial(lista, tamanho); break;
       case 6: retirar_no_posicao_n_sequencial(lista, tamanho); break;
       case 7: procurar_no_rg_sequencial(lista, *tamanho); break;
-      case 8: clear(); mostrar_sequencial(lista, *tamanho); break;
-      case 9: salvar_lista_sequencial(lista, *tamanho); break;
-      case 10: ler_lista_sequencial(lista, tamanho); break;
-      case 11: printf("Saindo...\n"); exit(0);
+      case 8: procurar_no_rg_binaria(lista, *tamanho); break;
+      case 9: selection_sort(lista, *tamanho); break;
+      case 10: insertion_sort_sequencial(lista, *tamanho); break;
+      case 11: bubble_sort_sequencial(lista, *tamanho); break;
+      case 12: shell_sort_sequencial(lista, *tamanho); break;
+      case 13: quick_sort_sequencial(lista, *tamanho); break;
+      case 14: break;
+      case 15: clear(); mostrar_sequencial(lista, *tamanho); break;
+      case 16: salvar_lista_sequencial(lista, *tamanho); break;
+      case 17: ler_lista_sequencial(lista, tamanho); break;
+      case 18: printf("Saindo...\n"); exit(0);
       default: printf("Opção inválida!\n"); break;
     }
     
@@ -555,7 +890,7 @@ void inserir_fim_encadeada(EncPessoa **inicio)
   int rg;
 
   printf("Insira o nome da pessoa: \n");
-  scanf(" %10[^\n]", nome);
+  scanf(" %9[^\n]", nome);
   printf("Insira o RG da pessoa: \n");
   scanf("%d", &rg);
   
@@ -608,7 +943,7 @@ void inserir_posicao_n_encadeada(EncPessoa **inicio, FILE *arquivo)
   printf("Em que posição deseja inserir os novos dados: \n");
   scanf("%d", &posicao);
   printf("Insira o nome da pessoa: \n");
-  scanf(" %10[^\n]", nome);
+  scanf(" %9[^\n]", nome);
   printf("Insira o RG da pessoa: \n");
   scanf("%d", &rg);
   
@@ -969,7 +1304,7 @@ void ler_lista_encadeada(EncPessoa **inicio)
   fclose(arquivo);
 }
 
-/* Sequencial - Preparar inicializando os tipos de dados e "lendo" os arquivos */
+/* Encadeda - Preparar inicializando os tipos de dados e "lendo" os arquivos */
 void encadeada(FILE *arquivo)
 {
   /* inicializando primeiro e último nó */
@@ -1017,6 +1352,11 @@ void funcoes_encadeada(FILE *arquivo, EncPessoa *atual, EncPessoa *inicio)
 
     /* exibindo o menu do texto */
     funcoes_texto();
+    printf(" 8) Mostrar a lista na tela.\n");
+    printf(" 9) Salvar a lista em um arquivo (nome,RG).\n");
+    printf("10) Ler a lista de um arquivo. (nome,RG) (lista)\n");
+    printf("11) Sair do sistema.\n\n");
+    printf("Opção desejada: \n");
 
     scanf("%d", &funcoes);
 
