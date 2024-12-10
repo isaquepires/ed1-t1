@@ -326,6 +326,7 @@ void retirar_no_posicao_n_sequencial(SeqPessoa *lista, int *tamanho)
 /* Sequencial - procurar nó com campo RG na lista Sequencial (Pesquisa Pequencial) */
 void procurar_no_rg_sequencial(SeqPessoa *lista, int tamanho)
 {
+  printf("Busca Sequencial\n");
 
   int rg, posicao = 0;
   printf("Insira o RG que deseja procurar: \n");
@@ -402,6 +403,8 @@ int busca_binaria_recursiva(SeqPessoa *lista, int inicio, int fim, int rg, int *
 /* Sequencial - procurar nó com campo RG na lista Sequencial (Pesquisa Binária) */
 void procurar_no_rg_binaria(SeqPessoa *lista, int tamanho)
 {
+  printf("Busca Binária\n");
+
   int rg;
   printf("Insira o RG que deseja procurar: \n");
   scanf("%d", &rg);
@@ -432,6 +435,8 @@ void procurar_no_rg_binaria(SeqPessoa *lista, int tamanho)
 /* SELECTION SORT - SEQUENCIAL */
 void selection_sort(SeqPessoa *lista, int tamanho)
 {
+  printf("SELECTION SORT\n");
+
   int menor_rg;
 
   tempo_inicio = clock();
@@ -478,6 +483,8 @@ void selection_sort(SeqPessoa *lista, int tamanho)
 /* INSERTION SORT - SEQUENCIAL */
 void insertion_sort_sequencial(SeqPessoa *lista, int tamanho)
 {
+  printf("INSERTION SORT\n");
+
   tempo_inicio = clock();
 
   /* percorre a lista toda ordenando */
@@ -516,6 +523,8 @@ void insertion_sort_sequencial(SeqPessoa *lista, int tamanho)
 /* BUBBLE SORT - SEQUENCIAL */
 void bubble_sort_sequencial(SeqPessoa *lista, int tamanho)
 {
+  printf("BUBBLE SORT\n");
+
   int trocou, i, j;
   tempo_inicio = clock();
 
@@ -562,6 +571,8 @@ void bubble_sort_sequencial(SeqPessoa *lista, int tamanho)
 /* SHELL SORT - SEQUENCIAL */
 void shell_sort_sequencial(SeqPessoa *lista, int tamanho)
 {
+  printf("SHELL SORT\n");
+
   int h, i, j;
   SeqPessoa chave;
 
@@ -665,6 +676,8 @@ void quicksort(SeqPessoa *lista, int inicio, int fim,  int *c, int *m)
 /* QUICK SORT - SEQUENCIAL - para manipular tempo e contabilizar c e m */
 void quick_sort_sequencial(SeqPessoa *lista, int tamanho)
 {
+  printf("QUICK SORT\n");
+
   int c = 0, m = 0;
   tempo_inicio = clock();
     
@@ -676,6 +689,131 @@ void quick_sort_sequencial(SeqPessoa *lista, int tamanho)
   printf("Número de movimentações: %d\n", m);
   tempo();
 }
+
+void merge(SeqPessoa *lista, int inicio, int meio, int fim, int *c, int *m)
+{
+  int i, j, k;
+
+  /* definindo os limites de sublistas da esquerda e direita */
+  int lista_esq = meio - inicio + 1;
+  int lista_dir = fim - meio;
+
+  /* aloca memória para as sublistas de cada lado */
+  SeqPessoa *esquerda = (SeqPessoa *)malloc(lista_esq * sizeof(SeqPessoa));
+  SeqPessoa *direita = (SeqPessoa *)malloc(lista_dir * sizeof(SeqPessoa));
+
+  /* copiando os dados para a sublista esquerda */
+  for (i = 0; i < lista_esq; i++)
+  {
+    (*c)++;
+    esquerda[i] = lista[inicio + i];
+    (*m)++;
+  }
+    
+  /* copiando os dados para a sublista direita */
+  for (j = 0; j < lista_dir; j++)
+  {
+    (*c)++;
+    direita[j] = lista[meio + 1 + j];
+    (*m)++;
+  }
+
+  /* definindo índice da esquerda, direita e da lista mesclada */
+  i = 0;
+  j = 0;
+  k = inicio;
+  
+  /* verifica se os índices estão dentro dos limites das sublistas */
+  while (i < lista_esq && j < lista_dir)
+  {
+    (*c)++;
+
+    /* para encontrar o menor RGs entre os lados das listas */
+    if (esquerda[i].rg <= direita[j].rg)
+    {
+      /* coloca no indice o rg da esquerda */
+      lista[k] = esquerda[i];
+      i++;
+    }
+    else
+    {
+      /* coloca no indice o rg da direita */
+      lista[k] = direita[j];
+      j++;
+    }
+    
+    (*c)++;
+    (*m)++;
+
+    /* avança o índice atual */
+    k++;
+  }
+  
+  /* se houver, passa copiando os dados restantes da sublista da esquerda */
+  while (i < lista_esq)
+  {
+    (*c)++;
+    lista[k] = esquerda[i];
+    (*m)++;
+    i++;
+    k++;
+  }
+  
+  /* se houver, passa copiando os dados restantes da sublista da esquerda */
+  while (j < lista_dir)
+  {
+    (*c)++;
+    lista[k] = direita[j];
+    (*m)++;
+    j++;
+    k++;
+  }
+  
+  /* liberando a memória anteriormente alocada dos lados */
+  free(esquerda);
+  free(direita);
+}
+
+/* MERGE SORT - SEQUENCIAL - ordenar recursivamente a lista */
+void merge_sort(SeqPessoa *lista, int inicio, int fim, int *c, int *m)
+{
+  /* verifica se a sublista tem mais de um rg */
+  if (inicio < fim)
+  {
+    (*c)++;
+
+    /* encontra o meio da lista */
+    int meio = inicio + (fim - inicio) / 2;
+    (*m)++;
+
+    /* ordenando do início até o meio da lista */
+    merge_sort(lista, inicio, meio, c, m);
+
+    /* ordenando do meio até o fim da lista */
+    merge_sort(lista, meio + 1, fim, c, m);
+
+    /* junta as duas metades já ordenadas */
+    merge(lista, inicio, meio, fim, c, m);
+  }
+}
+
+/* MERGE SORT - SEQUENCIAL - para manipular tempo e contabilizar c e m */
+void merge_sort_sequencial(SeqPessoa *lista, int tamanho)
+{
+  printf("MERGE SORT\n");
+
+  int c = 0, m = 0;
+  tempo_inicio = clock();
+  
+  /* realiza o quicksort na lista contabilizando c e m */
+  merge_sort(lista, 0, tamanho - 1, &c, &m);
+
+  tempo_fim = clock();
+  printf("Número de comparações: %d\n", c);
+  printf("Número de movimentações: %d\n", m);
+  tempo();
+}
+
 
 /* Sequencial - Mostrar a lista na tela */
 void mostrar_sequencial(SeqPessoa *lista, int tamanho)
@@ -776,7 +914,7 @@ void funcoes_sequencial(SeqPessoa *lista, int *tamanho)
       case 11: bubble_sort_sequencial(lista, *tamanho); break;
       case 12: shell_sort_sequencial(lista, *tamanho); break;
       case 13: quick_sort_sequencial(lista, *tamanho); break;
-      case 14: break;
+      case 14: merge_sort_sequencial(lista, *tamanho); break;
       case 15: clear(); mostrar_sequencial(lista, *tamanho); break;
       case 16: salvar_lista_sequencial(lista, *tamanho); break;
       case 17: ler_lista_sequencial(lista, tamanho); break;
